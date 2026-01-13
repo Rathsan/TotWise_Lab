@@ -9,6 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/member_Day1/member.css">
     <script src="/auth/auth.js"></script>
+    <!-- Reassurance Nudges -->
+    <script src="/reassurance-nudges.js"></script>
+    <!-- Soft Day-Locking -->
+    <script src="/soft-day-lock.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -30,11 +34,6 @@
 
         <main class="content">
             <section class="day-header-card">
-                <div class="day-number">
-                    <span class="day-label">Day</span>
-                    <span class="day-value">15</span>
-                    <span class="day-total">of 30</span>
-                </div>
                 <div class="day-info">
                     <div class="info-item">
                         <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -253,18 +252,19 @@
         }
 
         const currentDay = getCurrentDay();
+
+        // Check and apply soft day-locking if needed
+        if (typeof TotWiseSoftLock !== 'undefined') {
+            TotWiseSoftLock.checkAndApply(currentDay);
+        }
+
         const completeBtn = document.getElementById('completeBtn');
         const completionOverlay = document.getElementById('completionOverlay');
         const closeModalBtn = document.getElementById('closeModalBtn');
 
-        const completeBtnText = document.getElementById('completeBtnText');
-        if (completeBtnText) {
-            completeBtnText.textContent = `Mark Day ${currentDay} as Complete`;
-        }
-
         completeBtn.addEventListener('click', function() {
             this.classList.add('completed');
-            this.innerHTML = `<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Day ${currentDay} Complete!</span>`;
+            this.innerHTML = `<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Completed</span>`;
             setTimeout(() => { completionOverlay.classList.add('show'); }, 300);
         });
 
@@ -275,13 +275,25 @@
                 completedDays.push(currentDay);
                 localStorage.setItem('totwise.progress.completedDays', JSON.stringify(completedDays));
             }
+            
+            // Check and show reassurance nudge if needed
             const protocol = window.location.protocol;
             const pathname = window.location.pathname;
-            if (protocol === 'http:' || protocol === 'https:') {
-                const basePath = pathname.split('/member_Day')[0];
-                window.location.href = basePath + '/Dashboard/dashboard.html';
+            
+            function redirectToDashboard() {
+                if (protocol === 'http:' || protocol === 'https:') {
+                    const basePath = pathname.split('/member_Day')[0];
+                    window.location.href = basePath + '/Dashboard/dashboard.html';
+                } else {
+                    window.location.href = '../Dashboard/dashboard.html';
+                }
+            }
+            
+            // Check for nudge (Day 7, 15, or 30)
+            if (typeof TotWiseNudges !== 'undefined') {
+                TotWiseNudges.checkAndShow(currentDay, redirectToDashboard);
             } else {
-                window.location.href = '../Dashboard/dashboard.html';
+                redirectToDashboard();
             }
         }
 

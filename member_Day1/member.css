@@ -686,6 +686,61 @@ body {
 }
 
 /* ====================================
+   SOFT LOCK NOTICE
+   ==================================== */
+.soft-lock-notice {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: var(--space-lg);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 20px rgba(45, 59, 58, 0.08);
+}
+
+.soft-lock-content {
+    text-align: center;
+}
+
+.soft-lock-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--slate);
+    margin-bottom: var(--space-md);
+    line-height: 1.4;
+}
+
+.soft-lock-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    color: var(--slate);
+    margin-bottom: var(--space-xs);
+    line-height: 1.6;
+}
+
+.soft-lock-button {
+    display: inline-block;
+    margin-top: var(--space-md);
+    padding: var(--space-sm) var(--space-xl);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    background: var(--sage);
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 20px rgba(168, 197, 160, 0.3);
+}
+
+.soft-lock-button:hover {
+    background: var(--sage-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(168, 197, 160, 0.4);
+}
+
+/* ====================================
    COMPLETION OVERLAY
    ==================================== */
 .completion-overlay {

@@ -394,19 +394,16 @@
         </main>
     </div>
 
-    <!-- Locked Day Modal -->
+    <!-- Soft Lock Modal -->
     <div class="locked-modal" id="lockedModal">
         <div class="locked-modal-content">
-            <div class="locked-modal-icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="24" cy="24" r="22" fill="#F0F7EF"/>
-                    <path d="M24 10 C24 10 18 14 18 20 C18 24 20 28 24 32 C28 28 30 24 30 20 C30 14 24 10 24 10" fill="#A8C5A0"/>
-                    <ellipse cx="24" cy="20" rx="4" ry="5" fill="#7BA876"/>
-                </svg>
+            <h2 class="locked-modal-title">This will be ready tomorrow</h2>
+            <p class="locked-modal-text">Today is about one calm moment.</p>
+            <p class="locked-modal-text">You don't need to rush ahead.</p>
+            <div class="locked-modal-actions">
+                <button class="locked-modal-primary" id="backToTodayBtn">Back to Today</button>
             </div>
-            <p class="locked-modal-text">This day will unlock once you complete the previous activity.</p>
-            <p class="locked-modal-subtext">One step at a time is perfect.</p>
-            <button class="locked-modal-close" id="closeLockedModal">Got it</button>
+            <button class="locked-modal-close" id="closeLockedModal">Close</button>
         </div>
     </div>
 
@@ -542,11 +539,19 @@
             }
         }
         
+        // Function to get current unlocked day
+        function getCurrentUnlockedDay() {
+            const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
+            const currentDay = completedDays.length > 0 ? Math.max(...completedDays) + 1 : 1;
+            return Math.min(currentDay, 30); // Cap at 30
+        }
+
         // Update dashboard on page load
         updateDashboard();
 
         const lockedModal = document.getElementById('lockedModal');
         const closeLockedModal = document.getElementById('closeLockedModal');
+        const backToTodayBtn = document.getElementById('backToTodayBtn');
         const daysGrid = document.getElementById('daysGrid');
 
         // Handle day clicks
@@ -554,9 +559,17 @@
             const dayPill = e.target.closest('.day-pill');
             if (dayPill) {
                 const dayNum = parseInt(dayPill.getAttribute('data-day'));
+                const currentUnlockedDay = getCurrentUnlockedDay();
+                
+                // Soft day-locking: prevent accessing future days
+                if (dayNum > currentUnlockedDay) {
+                    // Show soft lock modal for future days
+                    lockedModal.classList.add('show');
+                    return;
+                }
                 
                 if (dayPill.classList.contains('locked')) {
-                    // Show locked modal for locked days
+                    // Show locked modal for locked days (shouldn't happen with soft locking, but keep for safety)
                     lockedModal.classList.add('show');
                 } else if (dayPill.classList.contains('active')) {
                     // Active day - navigate to that day's page using dynamic routing
@@ -567,6 +580,15 @@
                 }
             }
         });
+
+        // Back to Today button
+        if (backToTodayBtn) {
+            backToTodayBtn.addEventListener('click', function() {
+                lockedModal.classList.remove('show');
+                const currentUnlockedDay = getCurrentUnlockedDay();
+                window.location.href = `/member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
+            });
+        }
 
         // Close modal
         closeLockedModal.addEventListener('click', function() {

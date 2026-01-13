@@ -546,35 +546,32 @@ body {
     transform: scale(1) translateY(0);
 }
 
-.locked-modal-icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto var(--space-md);
-}
-
-.locked-modal-icon svg {
-    width: 100%;
-    height: 100%;
+.locked-modal-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--slate);
+    margin-bottom: var(--space-md);
+    line-height: 1.4;
 }
 
 .locked-modal-text {
     font-size: 1rem;
     color: var(--slate);
-    margin-bottom: var(--space-sm);
-    line-height: 1.5;
+    margin-bottom: var(--space-xs);
+    line-height: 1.6;
 }
 
-.locked-modal-subtext {
-    font-size: 0.9rem;
-    color: var(--sage-dark);
-    font-weight: 500;
-    margin-bottom: var(--space-lg);
+.locked-modal-actions {
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-md);
 }
 
-.locked-modal-close {
+.locked-modal-primary {
+    width: 100%;
     padding: var(--space-sm) var(--space-xl);
     font-family: 'Nunito', sans-serif;
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--white);
     background: var(--sage);
@@ -582,10 +579,28 @@ body {
     border-radius: var(--radius-full);
     cursor: pointer;
     transition: all 0.2s ease;
+    margin-bottom: var(--space-sm);
+}
+
+.locked-modal-primary:hover {
+    background: var(--sage-dark);
+    transform: translateY(-1px);
+}
+
+.locked-modal-close {
+    padding: var(--space-xs) var(--space-lg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--slate-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
 }
 
 .locked-modal-close:hover {
-    background: var(--sage-dark);
+    color: var(--slate);
 }
 
 /* ====================================
