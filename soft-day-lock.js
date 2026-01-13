@@ -157,6 +157,101 @@
             .brand:active {
                 opacity: 0.5;
             }
+
+            /* Completion blocked popup styles */
+            .completion-blocked-popup {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(45, 59, 58, 0.4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10001;
+                padding: 1rem;
+            }
+
+            .completion-blocked-popup-content {
+                background: #FFFFFF;
+                border-radius: 16px;
+                padding: 2rem;
+                max-width: 480px;
+                width: 100%;
+                box-shadow: 0 8px 32px rgba(45, 59, 58, 0.15);
+                text-align: center;
+            }
+
+            .completion-blocked-popup-title {
+                font-family: 'Nunito', sans-serif;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: #2D3B3A;
+                margin-bottom: 1rem;
+            }
+
+            .completion-blocked-popup-text {
+                font-family: 'DM Sans', sans-serif;
+                font-size: 1rem;
+                color: #2D3B3A;
+                margin-bottom: 0.5rem;
+                line-height: 1.6;
+            }
+
+            .completion-blocked-popup-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                margin-top: 1.5rem;
+            }
+
+            @media (min-width: 480px) {
+                .completion-blocked-popup-buttons {
+                    flex-direction: row;
+                    justify-content: center;
+                }
+            }
+
+            .completion-blocked-popup-button {
+                padding: 0.75rem 2rem;
+                font-family: 'Nunito', sans-serif;
+                font-size: 1rem;
+                font-weight: 700;
+                border-radius: 9999px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            .completion-blocked-popup-button-primary {
+                background: #A8C5A0;
+                color: #FFFFFF;
+                box-shadow: 0 4px 20px rgba(168, 197, 160, 0.3);
+            }
+
+            .completion-blocked-popup-button-primary:hover {
+                background: #7BA876;
+                transform: translateY(-1px);
+            }
+
+            .completion-blocked-popup-button-secondary {
+                background: transparent;
+                color: #2D3B3A;
+                border: 2px solid #A8C5A0;
+            }
+
+            .completion-blocked-popup-button-secondary:hover {
+                background: #F5F9F4;
+                border-color: #7BA876;
+            }
+
+            @media (min-width: 480px) {
+                .completion-blocked-popup-buttons {
+                    flex-direction: row;
+                    justify-content: center;
+                }
+            }
         `;
         document.head.appendChild(style);
     }
@@ -176,6 +271,74 @@
     function isDayLocked(dayNum) {
         const currentUnlockedDay = getCurrentUnlockedDay();
         return dayNum > currentUnlockedDay;
+    }
+
+    /**
+     * Show completion blocked popup
+     * This is the hard guard that prevents completion
+     */
+    function showCompletionBlockedPopup(currentDay) {
+        console.log('[TotWiseSoftLock] Showing completion blocked popup for day:', currentDay);
+        
+        const currentUnlockedDay = getCurrentUnlockedDay();
+        
+        // Remove existing popup if any
+        const existingPopup = document.getElementById('completion-blocked-popup');
+        if (existingPopup) {
+            existingPopup.remove();
+        }
+
+        // Get navigation paths
+        const protocol = window.location.protocol;
+        const pathname = window.location.pathname;
+        let backToTodayPath = '/Dashboard/dashboard.html';
+        let dashboardPath = '/Dashboard/dashboard.html';
+        
+        if (protocol === 'http:' || protocol === 'https:') {
+            const basePath = pathname.split('/member_Day')[0];
+            backToTodayPath = `${basePath}/member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
+            dashboardPath = `${basePath}/Dashboard/dashboard.html`;
+        } else {
+            backToTodayPath = `../member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
+            dashboardPath = '../Dashboard/dashboard.html';
+        }
+
+        // Create popup
+        const popup = document.createElement('div');
+        popup.id = 'completion-blocked-popup';
+        popup.className = 'completion-blocked-popup';
+        popup.innerHTML = `
+            <div class="completion-blocked-popup-content">
+                <h3 class="completion-blocked-popup-title">This will be available on its day</h3>
+                <p class="completion-blocked-popup-text">You can mark this activity as complete when its day arrives.</p>
+                <p class="completion-blocked-popup-text">For now, today's activity is enough.</p>
+                <div class="completion-blocked-popup-buttons">
+                    <button class="completion-blocked-popup-button completion-blocked-popup-button-primary" data-action="dismiss">Got it</button>
+                    <button class="completion-blocked-popup-button completion-blocked-popup-button-secondary" data-action="go-to-today">Go to Today</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(popup);
+
+        // Handle button clicks
+        popup.querySelector('[data-action="dismiss"]').addEventListener('click', function() {
+            popup.remove();
+        });
+
+        const goToTodayBtn = popup.querySelector('[data-action="go-to-today"]');
+        if (goToTodayBtn) {
+            goToTodayBtn.addEventListener('click', function() {
+                window.location.href = backToTodayPath;
+            });
+        }
+
+        // Close on background click
+        popup.addEventListener('click', function(e) {
+            if (e.target === popup) {
+                popup.remove();
+            }
+        });
     }
 
     /**
@@ -286,11 +449,11 @@
         
         notice.innerHTML = `
             <div class="soft-lock-content">
-                <h3 class="soft-lock-title">This will be ready tomorrow</h3>
-                <p class="soft-lock-text">Today is about one calm moment.</p>
-                <p class="soft-lock-text">You don't need to rush ahead.</p>
+                <h3 class="soft-lock-title">This activity isn't for today</h3>
+                <p class="soft-lock-text">Today's activity is enough for now.</p>
+                <p class="soft-lock-text">This one will be available on its actual day.</p>
                 <div class="soft-lock-buttons">
-                    <a href="${backToTodayPath}" class="soft-lock-button">Back to Today</a>
+                    <a href="${backToTodayPath}" class="soft-lock-button">Go to Today</a>
                     <a href="${dashboardPath}" class="soft-lock-button-secondary">Back to Dashboard</a>
                 </div>
             </div>
@@ -470,6 +633,12 @@
         /**
          * Show toast notification (exposed for use in day pages)
          */
-        showToast: showToast
+        showToast: showToast,
+        
+        /**
+         * Show completion blocked popup (exposed for use in day pages)
+         * This is the hard guard that prevents completion
+         */
+        showCompletionBlockedPopup: showCompletionBlockedPopup
     };
 })();

@@ -217,11 +217,14 @@
         const closeModalBtn = document.getElementById('closeModalBtn');
 
         completeBtn.addEventListener('click', function() {
-            // Prevent completion if day is locked and show informative toast
-            if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isDayLocked(currentDay)) {
+            // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
+            if (typeof TotWiseSoftLock !== 'undefined') {
                 const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                TotWiseSoftLock.showToast(`You can mark this complete when it becomes today. Right now, Day ${currentUnlockedDay} is ready.`);
-                return false;
+                if (currentDay !== currentUnlockedDay) {
+                    // Block completion - show popup and return early
+                    TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
+                    return false; // STOP execution - no progress update, no unlock, no nudge
+                }
             }
             
             this.classList.add('completed');
@@ -238,11 +241,14 @@
         });
 
         function handleCompletion() {
-            // Prevent completion if day is locked and show informative toast
-            if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isDayLocked(currentDay)) {
+            // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
+            if (typeof TotWiseSoftLock !== 'undefined') {
                 const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                TotWiseSoftLock.showToast(`You can mark this complete when it becomes today. Right now, Day ${currentUnlockedDay} is ready.`);
-                return false;
+                if (currentDay !== currentUnlockedDay) {
+                    // Block completion - show popup and return early
+                    TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
+                    return false; // STOP execution - no progress update, no unlock, no nudge
+                }
             }
             
             completionOverlay.classList.remove('show');

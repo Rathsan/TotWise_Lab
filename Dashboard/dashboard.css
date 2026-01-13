@@ -603,6 +603,38 @@ body {
     color: var(--slate);
 }
 
+.locked-modal-secondary {
+    padding: var(--space-sm) var(--space-lg);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--slate);
+    background: transparent;
+    border: 2px solid var(--sage);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: var(--space-sm);
+}
+
+.locked-modal-secondary:hover {
+    background: var(--sage-bg);
+    border-color: var(--sage-dark);
+}
+
+@media (min-width: 480px) {
+    .locked-modal-actions {
+        display: flex;
+        flex-direction: row;
+        gap: var(--space-sm);
+        justify-content: center;
+    }
+    
+    .locked-modal-secondary {
+        margin-top: 0;
+    }
+}
+
 /* ====================================
    RESPONSIVE
    ==================================== */

@@ -298,6 +298,7 @@
 
         // Check and apply soft day-locking if needed
         if (typeof TotWiseSoftLock !== 'undefined') {
+                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
             TotWiseSoftLock.checkAndApply(currentDay);
         }
 
@@ -306,10 +307,15 @@
         const closeModalBtn = document.getElementById('closeModalBtn');
 
         completeBtn.addEventListener('click', function() {
-            // Prevent completion if day is locked and show informative toast
-            if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isDayLocked(currentDay)) {
+            // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
+            if (typeof TotWiseSoftLock !== 'undefined') {
                 const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                TotWiseSoftLock.showToast(`You can mark this complete when it becomes today. Right now, Day ${currentUnlockedDay} is ready.`);
+                if (currentDay !== currentUnlockedDay) {
+                    // Block completion - show popup and return early
+                    TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
+                    return false; // STOP execution - no progress update, no unlock, no nudge
+                }
+            }
                 return false;
             }
             this.classList.add('completed');
@@ -326,6 +332,15 @@
         });
 
         function handleCompletion() {
+            // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
+            if (typeof TotWiseSoftLock !== 'undefined') {
+                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
+                if (currentDay !== currentUnlockedDay) {
+                    // Block completion - show popup and return early
+                    TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
+                    return false; // STOP execution - no progress update, no unlock, no nudge
+                }
+            }
             completionOverlay.classList.remove('show');
             
             const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');

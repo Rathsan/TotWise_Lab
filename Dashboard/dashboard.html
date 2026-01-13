@@ -397,11 +397,12 @@
     <!-- Soft Lock Modal -->
     <div class="locked-modal" id="lockedModal">
         <div class="locked-modal-content">
-            <h2 class="locked-modal-title">This will be ready tomorrow</h2>
-            <p class="locked-modal-text">Today is about one calm moment.</p>
+            <h2 class="locked-modal-title">This will be ready on its day</h2>
+            <p class="locked-modal-text">Each day is designed to be taken one calm moment at a time.</p>
             <p class="locked-modal-text">You don't need to rush ahead.</p>
             <div class="locked-modal-actions">
-                <button class="locked-modal-primary" id="backToTodayBtn">Back to Today</button>
+                <button class="locked-modal-primary" id="backToTodayBtn">Go to Today</button>
+                <button class="locked-modal-secondary" id="stayOnDashboardBtn">Back to Dashboard</button>
             </div>
             <button class="locked-modal-close" id="closeLockedModal">Close</button>
         </div>
@@ -599,7 +600,26 @@
             backToTodayBtn.addEventListener('click', function() {
                 lockedModal.classList.remove('show');
                 const currentUnlockedDay = getCurrentUnlockedDay();
-                window.location.href = `/member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
+                const protocol = window.location.protocol;
+                const pathname = window.location.pathname;
+                let todayPath = `/member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
+                
+                if (protocol === 'http:' || protocol === 'https:') {
+                    const basePath = pathname.split('/Dashboard')[0];
+                    todayPath = `${basePath}/member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
+                } else {
+                    todayPath = `../member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
+                }
+                
+                window.location.href = todayPath;
+            });
+        }
+        
+        // Stay on Dashboard button
+        const stayOnDashboardBtn = document.getElementById('stayOnDashboardBtn');
+        if (stayOnDashboardBtn) {
+            stayOnDashboardBtn.addEventListener('click', function() {
+                lockedModal.classList.remove('show');
             });
         }
 

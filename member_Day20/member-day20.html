@@ -253,6 +253,7 @@
         function initSoftLock() {
             // Check and apply soft day-locking if needed
             if (typeof TotWiseSoftLock !== 'undefined') {
+                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
                 console.log('[Day Page] TotWiseSoftLock available, checking day:', currentDay);
                 TotWiseSoftLock.checkAndApply(currentDay);
             } else {
@@ -274,11 +275,14 @@
         const closeModalBtn = document.getElementById('closeModalBtn');
 
         completeBtn.addEventListener('click', function() {
-            // Prevent completion if day is locked and show informative toast
-            if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isDayLocked(currentDay)) {
+            // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
+            if (typeof TotWiseSoftLock !== 'undefined') {
                 const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                TotWiseSoftLock.showToast(`You can mark this complete when it becomes today. Right now, Day ${currentUnlockedDay} is ready.`);
-                return false;
+                if (currentDay !== currentUnlockedDay) {
+                    // Block completion - show popup and return early
+                    TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
+                    return false; // STOP execution - no progress update, no unlock, no nudge
+                }
             }
             this.classList.add('completed');
             this.innerHTML = `<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Completed</span>`;
@@ -286,6 +290,16 @@
         });
 
         function handleCompletion() {
+            // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
+            if (typeof TotWiseSoftLock !== 'undefined') {
+                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
+                if (currentDay !== currentUnlockedDay) {
+                    // Block completion - show popup and return early
+                    TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
+                    return false; // STOP execution - no progress update, no unlock, no nudge
+                }
+            }
+            
             completionOverlay.classList.remove('show');
             const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
             if (!completedDays.includes(currentDay)) {
