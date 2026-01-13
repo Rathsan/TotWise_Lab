@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/member_Day1/member.css">
     <script src="/auth/auth.js"></script>
+    <!-- Soft Day-Locking -->
+    <script src="/soft-day-lock.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -260,6 +262,12 @@
         const closeModalBtn = document.getElementById('closeModalBtn');
 
         completeBtn.addEventListener('click', function() {
+            // Prevent completion if day is locked and show informative toast
+            if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isDayLocked(currentDay)) {
+                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
+                TotWiseSoftLock.showToast(`You can mark this complete when it becomes today. Right now, Day ${currentUnlockedDay} is ready.`);
+                return false;
+            }
             this.classList.add('completed');
             this.innerHTML = `<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Completed</span>`;
             setTimeout(() => { completionOverlay.classList.add('show'); }, 300);

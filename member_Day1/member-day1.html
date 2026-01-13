@@ -12,6 +12,8 @@
     <script src="/auth/auth.js"></script>
     <!-- Soft Day-Locking -->
     <script src="/soft-day-lock.js"></script>
+    <!-- Soft Day-Locking -->
+    <script src="/soft-day-lock.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -297,9 +299,24 @@
 
         const currentDay = getCurrentDay();
 
-        // Check and apply soft day-locking if needed
-        if (typeof TotWiseSoftLock !== 'undefined') {
-            TotWiseSoftLock.checkAndApply(currentDay);
+        // Wait for DOM to be fully ready before checking soft lock
+        function initSoftLock() {
+            // Check and apply soft day-locking if needed
+            if (typeof TotWiseSoftLock !== 'undefined') {
+                console.log('[Day Page] TotWiseSoftLock available, checking day:', currentDay);
+                TotWiseSoftLock.checkAndApply(currentDay);
+            } else {
+                console.warn('[Day Page] TotWiseSoftLock not available yet, retrying...');
+                setTimeout(initSoftLock, 100);
+            }
+        }
+        
+        // Initialize soft lock when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSoftLock);
+        } else {
+            // DOM already ready, but wait a bit for script to load
+            setTimeout(initSoftLock, 50);
         }
 
         // Mark Complete functionality
@@ -309,6 +326,12 @@
 
 
         completeBtn.addEventListener('click', function() {
+            // Prevent completion if day is locked and show informative toast
+            if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isDayLocked(currentDay)) {
+                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
+                TotWiseSoftLock.showToast(`You can mark this complete when it becomes today. Right now, Day ${currentUnlockedDay} is ready.`);
+                return false;
+            }
             this.classList.add('completed');
             this.innerHTML = `
                 <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
@@ -324,6 +347,13 @@
         });
 
         closeModalBtn.addEventListener('click', function() {
+            // Prevent completion if day is locked and show informative toast
+            if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isDayLocked(currentDay)) {
+                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
+                TotWiseSoftLock.showToast(`You can mark this complete when it becomes today. Right now, Day ${currentUnlockedDay} is ready.`);
+                return false;
+            }
+            
             completionOverlay.classList.remove('show');
             
             // Mark current day as completed in localStorage
@@ -350,6 +380,13 @@
 
         completionOverlay.addEventListener('click', function(e) {
             if (e.target === completionOverlay) {
+                // Prevent completion if day is locked and show informative toast
+                if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isDayLocked(currentDay)) {
+                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
+                TotWiseSoftLock.showToast(`You can mark this complete when it becomes today. Right now, Day ${currentUnlockedDay} is ready.`);
+                    return false;
+                }
+                
                 completionOverlay.classList.remove('show');
                 
                 // Mark current day as completed in localStorage

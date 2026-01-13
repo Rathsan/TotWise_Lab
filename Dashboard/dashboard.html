@@ -34,7 +34,7 @@
                 <div class="welcome-content">
                     <span class="welcome-wave">👋</span>
                     <div class="welcome-text">
-                        <p class="welcome-greeting">Hi Sarah</p>
+                        <p class="welcome-greeting" id="welcomeGreeting">Hi There</p>
                         <p class="welcome-message">You're doing great. Let's focus on today.</p>
                     </div>
                 </div>
@@ -428,6 +428,15 @@
             return '../login/login.html';
         }
 
+        // Function to update welcome greeting
+        // Using "Hi There" for a warm, consistent greeting that works for everyone
+        function updateWelcomeGreeting() {
+            const greetingElement = document.getElementById('welcomeGreeting');
+            if (greetingElement) {
+                greetingElement.textContent = 'Hi There';
+            }
+        }
+
         // Authentication check using centralized auth
         (function() {
             // Wait for auth.js to load, then use centralized auth
@@ -441,6 +450,9 @@
                     window.location.href = getLoginPath();
                 }
             }
+            
+            // Update welcome greeting after auth check
+            updateWelcomeGreeting();
         })();
 
         // Function to update dashboard based on completed days
@@ -546,8 +558,9 @@
             return Math.min(currentDay, 30); // Cap at 30
         }
 
-        // Update dashboard on page load
+        // Update dashboard and greeting on page load
         updateDashboard();
+        updateWelcomeGreeting();
 
         const lockedModal = document.getElementById('lockedModal');
         const closeLockedModal = document.getElementById('closeLockedModal');

@@ -306,6 +306,12 @@
         const closeModalBtn = document.getElementById('closeModalBtn');
 
         completeBtn.addEventListener('click', function() {
+            // Prevent completion if day is locked and show informative toast
+            if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isDayLocked(currentDay)) {
+                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
+                TotWiseSoftLock.showToast(`You can mark this complete when it becomes today. Right now, Day ${currentUnlockedDay} is ready.`);
+                return false;
+            }
             this.classList.add('completed');
             this.innerHTML = `
                 <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">

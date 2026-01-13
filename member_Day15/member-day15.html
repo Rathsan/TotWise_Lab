@@ -263,12 +263,26 @@
         const closeModalBtn = document.getElementById('closeModalBtn');
 
         completeBtn.addEventListener('click', function() {
+            // Prevent completion if day is locked and show informative toast
+            if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isDayLocked(currentDay)) {
+                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
+                TotWiseSoftLock.showToast(`You can mark this complete when it becomes today. Right now, Day ${currentUnlockedDay} is ready.`);
+                return false;
+            }
+            
             this.classList.add('completed');
             this.innerHTML = `<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Completed</span>`;
             setTimeout(() => { completionOverlay.classList.add('show'); }, 300);
         });
 
         function handleCompletion() {
+            // Prevent completion if day is locked and show informative toast
+            if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isDayLocked(currentDay)) {
+                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
+                TotWiseSoftLock.showToast(`You can mark this complete when it becomes today. Right now, Day ${currentUnlockedDay} is ready.`);
+                return false;
+            }
+            
             completionOverlay.classList.remove('show');
             const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
             if (!completedDays.includes(currentDay)) {
@@ -276,7 +290,7 @@
                 localStorage.setItem('totwise.progress.completedDays', JSON.stringify(completedDays));
             }
             
-            // Check and show reassurance nudge if needed
+            // Check and show reassurance nudge if needed (only for unlocked days)
             const protocol = window.location.protocol;
             const pathname = window.location.pathname;
             
@@ -289,7 +303,7 @@
                 }
             }
             
-            // Check for nudge (Day 7, 15, or 30)
+            // Check for nudge (Day 7, 15, or 30) - only if day is not locked
             if (typeof TotWiseNudges !== 'undefined') {
                 TotWiseNudges.checkAndShow(currentDay, redirectToDashboard);
             } else {

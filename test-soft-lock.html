@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Soft Lock</title>
+    <script src="/soft-day-lock.js"></script>
+</head>
+<body>
+    <h1>Soft Lock Test Page</h1>
+    <p>Open browser console (F12) to see debug logs.</p>
+    <p>Check if TotWiseSoftLock is available:</p>
+    <pre id="status"></pre>
+    
+    <script>
+        // Wait for script to load
+        setTimeout(() => {
+            const status = document.getElementById('status');
+            if (typeof TotWiseSoftLock !== 'undefined') {
+                status.textContent = '✅ TotWiseSoftLock loaded!\n' +
+                    'Current unlocked day: ' + TotWiseSoftLock.getCurrentUnlockedDay() + '\n' +
+                    'Day 20 locked: ' + TotWiseSoftLock.isDayLocked(20) + '\n' +
+                    'Day 1 locked: ' + TotWiseSoftLock.isDayLocked(1);
+                
+                // Test toast
+                console.log('Testing toast...');
+                TotWiseSoftLock.showToast('Test toast message - if you see this, toast is working!');
+            } else {
+                status.textContent = '❌ TotWiseSoftLock not loaded. Check script path.';
+            }
+        }, 500);
+    </script>
+</body>
+</html>
