@@ -220,7 +220,7 @@
             // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
             if (typeof TotWiseSoftLock !== 'undefined') {
                 const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                if (currentDay !== currentUnlockedDay) {
+                if (TotWiseSoftLock.isFutureDay(currentDay)) {
                     // Block completion - show popup and return early
                     TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
                     return false; // STOP execution - no progress update, no unlock, no nudge
@@ -244,7 +244,7 @@
             // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
             if (typeof TotWiseSoftLock !== 'undefined') {
                 const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                if (currentDay !== currentUnlockedDay) {
+                if (TotWiseSoftLock.isFutureDay(currentDay)) {
                     // Block completion - show popup and return early
                     TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
                     return false; // STOP execution - no progress update, no unlock, no nudge
@@ -252,14 +252,10 @@
             }
             
             completionOverlay.classList.remove('show');
-            
-            const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
-            if (!completedDays.includes(currentDay)) {
-                completedDays.push(currentDay);
-                localStorage.setItem('totwise.progress.completedDays', JSON.stringify(completedDays));
+            if (typeof TotWiseSoftLock !== 'undefined') {
+                TotWiseSoftLock.recordCompletion(currentDay);
                 console.log(`Day ${currentDay} marked as completed`);
             }
-            
             // Check and show reassurance nudge if needed (only for unlocked days)
             const protocol = window.location.protocol;
             const pathname = window.location.pathname;

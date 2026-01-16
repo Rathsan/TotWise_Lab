@@ -220,11 +220,18 @@
             // Template parameters - adjust variable names to match your EmailJS template
             // Common variable names: to_email, to_name, message, message_html, reply_to, etc.
             const templateParams = {
+                // Recipient fields (support multiple common template variable names)
                 to_email: email,
-                to_name: email.split('@')[0], // Use part before @ as name
-                dashboard_link: dashboardLink,
+                to: email,
+                recipient_email: email,
+                email: email,
                 user_email: email,
+                reply_to: email,
+                to_name: email.split('@')[0], // Use part before @ as name
+                // Link fields
+                dashboard_link: dashboardLink,
                 login_link: dashboardLink, // Alternative name in case template uses this
+                // Meta fields
                 from_name: 'TotWise Lab',
                 subject: 'Your Secure Login Link - TotWise Lab',
                 message: `Click the link below to access your TotWise Lab dashboard:\n\n${dashboardLink}\n\nThis link is valid for 24 hours and can only be used once.\n\nIf you didn't request this link, please ignore this email.`,

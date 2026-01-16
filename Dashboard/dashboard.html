@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="dashboard.css">
+    <!-- Soft Day-Locking (for isFutureDay function) -->
+    <script src="/soft-day-lock.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -111,265 +113,236 @@
                         </span>
                     </button>
                     
-                    <!-- Days 2-30 - Locked -->
-                    <button class="day-pill locked" data-day="2">
+                    <!-- Days 2-30 - Available for viewing (soft lock prevents completion) -->
+                    <button class="day-pill" data-day="2">
                         <span class="day-num">2</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="3">
+                    <button class="day-pill" data-day="3">
                         <span class="day-num">3</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="4">
+                    <button class="day-pill" data-day="4">
                         <span class="day-num">4</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="5">
+                    <button class="day-pill" data-day="5">
                         <span class="day-num">5</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="6">
+                    <button class="day-pill" data-day="6">
                         <span class="day-num">6</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="7">
+                    <button class="day-pill" data-day="7">
                         <span class="day-num">7</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="8">
+                    <button class="day-pill" data-day="8">
                         <span class="day-num">8</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="9">
+                    <button class="day-pill" data-day="9">
                         <span class="day-num">9</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="10">
+                    <button class="day-pill" data-day="10">
                         <span class="day-num">10</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="11">
+                    <button class="day-pill" data-day="11">
                         <span class="day-num">11</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="12">
+                    <button class="day-pill" data-day="12">
                         <span class="day-num">12</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="13">
+                    <button class="day-pill" data-day="13">
                         <span class="day-num">13</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="14">
+                    <button class="day-pill" data-day="14">
                         <span class="day-num">14</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="15">
+                    <button class="day-pill" data-day="15">
                         <span class="day-num">15</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="16">
+                    <button class="day-pill" data-day="16">
                         <span class="day-num">16</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="17">
+                    <button class="day-pill" data-day="17">
                         <span class="day-num">17</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="18">
+                    <button class="day-pill" data-day="18">
                         <span class="day-num">18</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="19">
+                    <button class="day-pill" data-day="19">
                         <span class="day-num">19</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="20">
+                    <button class="day-pill" data-day="20">
                         <span class="day-num">20</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="21">
+                    <button class="day-pill" data-day="21">
                         <span class="day-num">21</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="22">
+                    <button class="day-pill" data-day="22">
                         <span class="day-num">22</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="23">
+                    <button class="day-pill" data-day="23">
                         <span class="day-num">23</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="24">
+                    <button class="day-pill" data-day="24">
                         <span class="day-num">24</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="25">
+                    <button class="day-pill" data-day="25">
                         <span class="day-num">25</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="26">
+                    <button class="day-pill" data-day="26">
                         <span class="day-num">26</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="27">
+                    <button class="day-pill" data-day="27">
                         <span class="day-num">27</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="28">
+                    <button class="day-pill" data-day="28">
                         <span class="day-num">28</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="29">
+                    <button class="day-pill" data-day="29">
                         <span class="day-num">29</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
-                    <button class="day-pill locked" data-day="30">
+                    <button class="day-pill" data-day="30">
                         <span class="day-num">30</span>
                         <span class="day-status">
                             <svg viewBox="0 0 16 16" fill="none">
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             </svg>
                         </span>
                     </button>
@@ -462,9 +435,8 @@
             const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
             console.log('Completed days:', completedDays);
             
-            // Calculate current day (next unlocked day)
-            const currentDay = completedDays.length > 0 ? Math.max(...completedDays) + 1 : 1;
-            const currentDayLimited = Math.min(currentDay, 30); // Cap at 30
+            // Calculate current day (next unlocked day) using calendar-day cooldown
+            const currentDayLimited = getCurrentUnlockedDay();
             
             // Update progress count
             const progressCount = document.querySelector('.progress-count');
@@ -538,13 +510,16 @@
                         // Past days that weren't completed (shouldn't happen, but handle it)
                         pill.classList.add('locked');
                     } else {
-                        // Future days - locked
-                        pill.classList.add('locked');
+                        // Future days - soft lock: allow viewing but not completion
+                        // Don't add 'locked' class - make them look normal/clickable
+                        // They can be clicked to view content, but completion will be blocked
+                        pill.classList.remove('locked');
+                        // Leave status empty or use a subtle dot - they look normal/available
                         const statusSvg = pill.querySelector('.day-status svg');
                         if (statusSvg) {
+                            // Subtle empty circle or leave blank for clean look
                             statusSvg.innerHTML = `
-                                <rect x="4" y="7" width="8" height="6" rx="1.5" fill="currentColor"/>
-                                <path d="M6 7V5a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.2"/>
                             `;
                         }
                     }
@@ -554,6 +529,9 @@
         
         // Function to get current unlocked day
         function getCurrentUnlockedDay() {
+            if (typeof TotWiseSoftLock !== 'undefined') {
+                return TotWiseSoftLock.getCurrentUnlockedDay();
+            }
             const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
             const currentDay = completedDays.length > 0 ? Math.max(...completedDays) + 1 : 1;
             return Math.min(currentDay, 30); // Cap at 30
@@ -573,25 +551,27 @@
             const dayPill = e.target.closest('.day-pill');
             if (dayPill) {
                 const dayNum = parseInt(dayPill.getAttribute('data-day'));
-                const currentUnlockedDay = getCurrentUnlockedDay();
                 
-                // Soft day-locking: prevent accessing future days
-                if (dayNum > currentUnlockedDay) {
-                    // Show soft lock modal for future days
+                // SINGLE SOURCE OF TRUTH: Use centralized isFutureDay check
+                if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isFutureDay(dayNum)) {
+                    // Future day - show soft lock modal (allow viewing but prevent completion)
                     lockedModal.classList.add('show');
                     return;
                 }
                 
-                if (dayPill.classList.contains('locked')) {
-                    // Show locked modal for locked days (shouldn't happen with soft locking, but keep for safety)
-                    lockedModal.classList.add('show');
-                } else if (dayPill.classList.contains('active')) {
-                    // Active day - navigate to that day's page using dynamic routing
-                    window.location.href = `/member_Day${dayNum}/member-day${dayNum}.html`;
-                } else if (dayPill.classList.contains('completed')) {
-                    // Completed day - navigate to that day's page (for review)
-                    window.location.href = `/member_Day${dayNum}/member-day${dayNum}.html`;
+                // Current or completed day - navigate normally
+                const protocol = window.location.protocol;
+                const pathname = window.location.pathname;
+                let dayPath = `/member_Day${dayNum}/member-day${dayNum}.html`;
+                
+                if (protocol === 'http:' || protocol === 'https:') {
+                    const basePath = pathname.split('/Dashboard')[0];
+                    dayPath = `${basePath}/member_Day${dayNum}/member-day${dayNum}.html`;
+                } else {
+                    dayPath = `../member_Day${dayNum}/member-day${dayNum}.html`;
                 }
+                
+                window.location.href = dayPath;
             }
         });
 

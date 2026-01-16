@@ -107,18 +107,18 @@
     const NUDGE_CONFIG = {
         7: {
             flag: 'week1NudgeShown',
-            title: 'You didn't need to do it perfectly',
-            body: 'This week wasn't about finishing activities.\nIt was about showing up calmly.\nIf your child watched, tried, or just stayed near you — that counted.\nYou're on the right track.'
+            title: "You didn't need to do it perfectly",
+            body: "This week wasn't about finishing activities.\nIt was about showing up calmly.\nIf your child watched, tried, or just stayed near you — that counted.\nYou're on the right track."
         },
         15: {
             flag: 'week2NudgeShown',
             title: 'Learning is happening quietly',
-            body: 'Repeating simple moments builds strong foundations.\nThere's nothing you need to add or fix.\nKeep going gently.'
+            body: "Repeating simple moments builds strong foundations.\nThere's nothing you need to add or fix.\nKeep going gently."
         },
         30: {
             flag: 'week4NudgeShown',
             title: 'You already know how to continue',
-            body: 'The last few weeks weren't about activities.\nThey were about confidence.\nThat stays with you.'
+            body: "The last few weeks weren't about activities.\nThey were about confidence.\nThat stays with you."
         }
     };
 

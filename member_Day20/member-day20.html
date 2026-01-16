@@ -274,26 +274,44 @@
         const completionOverlay = document.getElementById('completionOverlay');
         const closeModalBtn = document.getElementById('closeModalBtn');
 
-        completeBtn.addEventListener('click', function() {
-            // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
-            if (typeof TotWiseSoftLock !== 'undefined') {
+        // Wait for script to load before attaching click handler
+        function attachCompletionHandler() {
+            if (typeof TotWiseSoftLock === 'undefined') {
+                console.warn('[Day 20] TotWiseSoftLock not loaded yet, retrying...');
+                setTimeout(attachCompletionHandler, 100);
+                return;
+            }
+
+            completeBtn.addEventListener('click', function(e) {
+                // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
+                console.log('[Day 20] Complete button clicked, currentDay:', currentDay);
                 const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                if (currentDay !== currentUnlockedDay) {
+                console.log('[Day 20] Current unlocked day:', currentUnlockedDay);
+                
+                if (TotWiseSoftLock.isFutureDay(currentDay)) {
                     // Block completion - show popup and return early
+                    console.log('[Day 20] Day is locked, showing popup');
+                    e.preventDefault();
+                    e.stopPropagation();
                     TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
                     return false; // STOP execution - no progress update, no unlock, no nudge
                 }
-            }
-            this.classList.add('completed');
-            this.innerHTML = `<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Completed</span>`;
-            setTimeout(() => { completionOverlay.classList.add('show'); }, 300);
-        });
+                
+                // Normal completion flow
+                this.classList.add('completed');
+                this.innerHTML = `<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Completed</span>`;
+                setTimeout(() => { completionOverlay.classList.add('show'); }, 300);
+            });
+        }
+
+        // Start attaching handler after a short delay to ensure script is loaded
+        setTimeout(attachCompletionHandler, 200);
 
         function handleCompletion() {
             // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
             if (typeof TotWiseSoftLock !== 'undefined') {
                 const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                if (currentDay !== currentUnlockedDay) {
+                if (TotWiseSoftLock.isFutureDay(currentDay)) {
                     // Block completion - show popup and return early
                     TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
                     return false; // STOP execution - no progress update, no unlock, no nudge
@@ -301,10 +319,8 @@
             }
             
             completionOverlay.classList.remove('show');
-            const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
-            if (!completedDays.includes(currentDay)) {
-                completedDays.push(currentDay);
-                localStorage.setItem('totwise.progress.completedDays', JSON.stringify(completedDays));
+            if (typeof TotWiseSoftLock !== 'undefined') {
+                TotWiseSoftLock.recordCompletion(currentDay);
             }
             const protocol = window.location.protocol;
             const pathname = window.location.pathname;

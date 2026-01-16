@@ -256,21 +256,90 @@
         document.head.appendChild(style);
     }
 
+    const LAST_COMPLETED_DATE_KEY = 'totwise.progress.lastCompletedDate';
+
     /**
-     * Get current unlocked day based on progress
+     * Get local date string in YYYY-MM-DD format (local timezone)
+     */
+    function getLocalDateString() {
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    /**
+     * Get last completed date (YYYY-MM-DD) from storage
+     */
+    function getLastCompletedDate() {
+        return localStorage.getItem(LAST_COMPLETED_DATE_KEY);
+    }
+
+    /**
+     * Store last completed date (YYYY-MM-DD)
+     */
+    function setLastCompletedDate(dateString) {
+        localStorage.setItem(LAST_COMPLETED_DATE_KEY, dateString);
+    }
+
+    /**
+     * Get current unlocked day based on progress + calendar-day cooldown
      */
     function getCurrentUnlockedDay() {
         const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
-        const currentDay = completedDays.length > 0 ? Math.max(...completedDays) + 1 : 1;
-        return Math.min(currentDay, 30); // Cap at 30
+        if (completedDays.length === 0) {
+            return 1;
+        }
+
+        const maxCompleted = Math.max(...completedDays);
+        const today = getLocalDateString();
+        const lastCompletedDate = getLastCompletedDate();
+
+        // If the last completion happened today, do NOT unlock next day yet
+        if (lastCompletedDate && lastCompletedDate === today) {
+            return Math.min(maxCompleted, 30);
+        }
+
+        // Calendar day changed (or no last date stored) -> unlock next day
+        return Math.min(maxCompleted + 1, 30);
     }
 
     /**
      * Check if a day is locked (future day)
+     * @deprecated Use isFutureDay instead for consistency
      */
     function isDayLocked(dayNum) {
-        const currentUnlockedDay = getCurrentUnlockedDay();
-        return dayNum > currentUnlockedDay;
+        return isFutureDay(dayNum);
+    }
+
+    /**
+     * SINGLE SOURCE OF TRUTH: Check if a day is a future day
+     * This is the ONLY function that should be used for soft-lock checks
+     * @param {number} pageDay - The day number being checked
+     * @param {number} currentUnlockedDay - The current unlocked day (optional, will fetch if not provided)
+     * @returns {boolean} - true if pageDay is a future day (should be soft-locked)
+     */
+    function isFutureDay(pageDay, currentUnlockedDay) {
+        // If currentUnlockedDay not provided, fetch it
+        if (currentUnlockedDay === undefined || currentUnlockedDay === null) {
+            currentUnlockedDay = getCurrentUnlockedDay();
+        }
+        // Future day = pageDay is greater than current unlocked day
+        return pageDay > currentUnlockedDay;
+    }
+
+    /**
+     * Record completion for a day and store lastCompletedDate
+     * This does NOT unlock the next day immediately (cooldown applies on next load).
+     */
+    function recordCompletion(dayNum) {
+        const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
+        if (!completedDays.includes(dayNum)) {
+            completedDays.push(dayNum);
+            localStorage.setItem('totwise.progress.completedDays', JSON.stringify(completedDays));
+        }
+        setLastCompletedDate(getLocalDateString());
     }
 
     /**
@@ -281,11 +350,20 @@
         console.log('[TotWiseSoftLock] Showing completion blocked popup for day:', currentDay);
         
         const currentUnlockedDay = getCurrentUnlockedDay();
+        console.log('[TotWiseSoftLock] Current unlocked day:', currentUnlockedDay);
         
         // Remove existing popup if any
         const existingPopup = document.getElementById('completion-blocked-popup');
         if (existingPopup) {
+            console.log('[TotWiseSoftLock] Removing existing popup');
             existingPopup.remove();
+        }
+        
+        // Ensure body exists
+        if (!document.body) {
+            console.error('[TotWiseSoftLock] document.body is not available!');
+            setTimeout(() => showCompletionBlockedPopup(currentDay), 100);
+            return;
         }
 
         // Get navigation paths
@@ -309,7 +387,7 @@
         popup.className = 'completion-blocked-popup';
         popup.innerHTML = `
             <div class="completion-blocked-popup-content">
-                <h3 class="completion-blocked-popup-title">This will be available on its day</h3>
+                <h3 class="completion-blocked-popup-title">This will be available on its own day</h3>
                 <p class="completion-blocked-popup-text">You can mark this activity as complete when its day arrives.</p>
                 <p class="completion-blocked-popup-text">For now, today's activity is enough.</p>
                 <div class="completion-blocked-popup-buttons">
@@ -320,15 +398,23 @@
         `;
         
         document.body.appendChild(popup);
+        console.log('[TotWiseSoftLock] Popup appended to body');
 
         // Handle button clicks
-        popup.querySelector('[data-action="dismiss"]').addEventListener('click', function() {
-            popup.remove();
-        });
+        const dismissBtn = popup.querySelector('[data-action="dismiss"]');
+        if (dismissBtn) {
+            dismissBtn.addEventListener('click', function() {
+                console.log('[TotWiseSoftLock] Dismiss button clicked');
+                popup.remove();
+            });
+        } else {
+            console.error('[TotWiseSoftLock] Dismiss button not found!');
+        }
 
         const goToTodayBtn = popup.querySelector('[data-action="go-to-today"]');
         if (goToTodayBtn) {
             goToTodayBtn.addEventListener('click', function() {
+                console.log('[TotWiseSoftLock] Go to Today button clicked');
                 window.location.href = backToTodayPath;
             });
         }
@@ -336,9 +422,12 @@
         // Close on background click
         popup.addEventListener('click', function(e) {
             if (e.target === popup) {
+                console.log('[TotWiseSoftLock] Background clicked, closing popup');
                 popup.remove();
             }
         });
+        
+        console.log('[TotWiseSoftLock] Popup setup complete, popup should be visible');
     }
 
     /**
@@ -605,7 +694,8 @@
             const currentUnlockedDay = getCurrentUnlockedDay();
             console.log('[TotWiseSoftLock] Current unlocked day:', currentUnlockedDay);
             
-            if (isDayLocked(dayNum)) {
+            // SINGLE SOURCE OF TRUTH: Use centralized isFutureDay function
+            if (isFutureDay(dayNum, currentUnlockedDay)) {
                 console.log('[TotWiseSoftLock] Day is locked, applying soft lock');
                 // Prevent all completion logic first
                 preventCompletionForLockedDay(dayNum);
@@ -624,11 +714,37 @@
          * Get current unlocked day (exposed for use in day pages)
          */
         getCurrentUnlockedDay: getCurrentUnlockedDay,
+
+        /**
+         * Record completion for a day and store lastCompletedDate
+         */
+        recordCompletion: recordCompletion,
+
+        /**
+         * Get local date string (YYYY-MM-DD)
+         */
+        getLocalDateString: getLocalDateString,
+
+        /**
+         * Get last completed date (YYYY-MM-DD)
+         */
+        getLastCompletedDate: getLastCompletedDate,
         
         /**
          * Check if a day is locked (exposed for use in day pages)
+         * @deprecated Use isFutureDay instead for consistency
          */
         isDayLocked: isDayLocked,
+        
+        /**
+         * SINGLE SOURCE OF TRUTH: Check if a day is a future day
+         * This is the ONLY function that should be used for soft-lock checks
+         * Use this everywhere: dashboard clicks, page load, completion buttons
+         * @param {number} pageDay - The day number being checked
+         * @param {number} currentUnlockedDay - Optional: current unlocked day (will fetch if not provided)
+         * @returns {boolean} - true if pageDay is a future day (should be soft-locked)
+         */
+        isFutureDay: isFutureDay,
         
         /**
          * Show toast notification (exposed for use in day pages)

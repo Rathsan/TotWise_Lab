@@ -206,13 +206,11 @@
             // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
             if (typeof TotWiseSoftLock !== 'undefined') {
                 const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                if (currentDay !== currentUnlockedDay) {
+                if (TotWiseSoftLock.isFutureDay(currentDay)) {
                     // Block completion - show popup and return early
                     TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
                     return false; // STOP execution - no progress update, no unlock, no nudge
                 }
-            }
-                return false;
             }
             this.classList.add('completed');
             this.innerHTML = `<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Completed</span>`;
@@ -223,17 +221,15 @@
             // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
             if (typeof TotWiseSoftLock !== 'undefined') {
                 const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                if (currentDay !== currentUnlockedDay) {
+                if (TotWiseSoftLock.isFutureDay(currentDay)) {
                     // Block completion - show popup and return early
                     TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
                     return false; // STOP execution - no progress update, no unlock, no nudge
                 }
             }
             completionOverlay.classList.remove('show');
-            const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
-            if (!completedDays.includes(currentDay)) {
-                completedDays.push(currentDay);
-                localStorage.setItem('totwise.progress.completedDays', JSON.stringify(completedDays));
+            if (typeof TotWiseSoftLock !== 'undefined') {
+                TotWiseSoftLock.recordCompletion(currentDay);
             }
             const protocol = window.location.protocol;
             const pathname = window.location.pathname;
