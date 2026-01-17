@@ -256,53 +256,15 @@
         document.head.appendChild(style);
     }
 
-    const LAST_COMPLETED_DATE_KEY = 'totwise.progress.lastCompletedDate';
-
     /**
-     * Get local date string in YYYY-MM-DD format (local timezone)
-     */
-    function getLocalDateString() {
-        const d = new Date();
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    }
-
-    /**
-     * Get last completed date (YYYY-MM-DD) from storage
-     */
-    function getLastCompletedDate() {
-        return localStorage.getItem(LAST_COMPLETED_DATE_KEY);
-    }
-
-    /**
-     * Store last completed date (YYYY-MM-DD)
-     */
-    function setLastCompletedDate(dateString) {
-        localStorage.setItem(LAST_COMPLETED_DATE_KEY, dateString);
-    }
-
-    /**
-     * Get current unlocked day based on progress + calendar-day cooldown
+     * Get current unlocked day from TotWiseCore
      */
     function getCurrentUnlockedDay() {
-        const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
-        if (completedDays.length === 0) {
-            return 1;
+        if (window.TotWiseCore && typeof window.TotWiseCore.getProgressState === 'function') {
+            return window.TotWiseCore.getProgressState().currentUnlockedDay;
         }
-
-        const maxCompleted = Math.max(...completedDays);
-        const today = getLocalDateString();
-        const lastCompletedDate = getLastCompletedDate();
-
-        // If the last completion happened today, do NOT unlock next day yet
-        if (lastCompletedDate && lastCompletedDate === today) {
-            return Math.min(maxCompleted, 30);
-        }
-
-        // Calendar day changed (or no last date stored) -> unlock next day
-        return Math.min(maxCompleted + 1, 30);
+        console.error('[TotWiseSoftLock] TotWiseCore not available for progress state');
+        return 1;
     }
 
     /**
@@ -320,13 +282,12 @@
      * @param {number} currentUnlockedDay - The current unlocked day (optional, will fetch if not provided)
      * @returns {boolean} - true if pageDay is a future day (should be soft-locked)
      */
-    function isFutureDay(pageDay, currentUnlockedDay) {
-        // If currentUnlockedDay not provided, fetch it
-        if (currentUnlockedDay === undefined || currentUnlockedDay === null) {
-            currentUnlockedDay = getCurrentUnlockedDay();
+    function isFutureDay(pageDay) {
+        if (window.TotWiseCore && typeof window.TotWiseCore.isFutureDay === 'function') {
+            return window.TotWiseCore.isFutureDay(pageDay);
         }
-        // Future day = pageDay is greater than current unlocked day
-        return pageDay > currentUnlockedDay;
+        console.error('[TotWiseSoftLock] TotWiseCore not available for isFutureDay');
+        return false;
     }
 
     /**
@@ -334,12 +295,11 @@
      * This does NOT unlock the next day immediately (cooldown applies on next load).
      */
     function recordCompletion(dayNum) {
-        const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
-        if (!completedDays.includes(dayNum)) {
-            completedDays.push(dayNum);
-            localStorage.setItem('totwise.progress.completedDays', JSON.stringify(completedDays));
+        if (window.TotWiseCore && typeof window.TotWiseCore.markTodayComplete === 'function') {
+            window.TotWiseCore.markTodayComplete(dayNum);
+            return;
         }
-        setLastCompletedDate(getLocalDateString());
+        console.error('[TotWiseSoftLock] TotWiseCore not available for markTodayComplete');
     }
 
     /**
@@ -684,6 +644,11 @@
     /**
      * Initialize soft day-locking for member day pages
      */
+    function activateSoftLockPage(dayNum) {
+        preventCompletionForLockedDay(dayNum);
+        showSoftLockNotice(dayNum);
+    }
+
     window.TotWiseSoftLock = {
         /**
          * Check and apply soft lock if needed
@@ -691,19 +656,10 @@
          */
         checkAndApply: function(dayNum) {
             console.log('[TotWiseSoftLock] Checking day:', dayNum);
-            const currentUnlockedDay = getCurrentUnlockedDay();
-            console.log('[TotWiseSoftLock] Current unlocked day:', currentUnlockedDay);
-            
             // SINGLE SOURCE OF TRUTH: Use centralized isFutureDay function
-            if (isFutureDay(dayNum, currentUnlockedDay)) {
+            if (isFutureDay(dayNum)) {
                 console.log('[TotWiseSoftLock] Day is locked, applying soft lock');
-                // Prevent all completion logic first
-                preventCompletionForLockedDay(dayNum);
-                // Then show the soft lock notice (with a small delay to ensure DOM is ready)
-                setTimeout(() => {
-                    console.log('[TotWiseSoftLock] Showing soft lock notice');
-                    showSoftLockNotice(dayNum);
-                }, 100);
+                activateSoftLockPage(dayNum);
                 return true; // Day is locked
             }
             console.log('[TotWiseSoftLock] Day is not locked');
@@ -723,12 +679,16 @@
         /**
          * Get local date string (YYYY-MM-DD)
          */
-        getLocalDateString: getLocalDateString,
+        getLocalDateString: function() {
+            return window.TotWiseCore ? window.TotWiseCore.getTodayDateString() : null;
+        },
 
         /**
          * Get last completed date (YYYY-MM-DD)
          */
-        getLastCompletedDate: getLastCompletedDate,
+        getLastCompletedDate: function() {
+            return window.TotWiseCore ? window.TotWiseCore.getLastCompletedDate() : null;
+        },
         
         /**
          * Check if a day is locked (exposed for use in day pages)
@@ -755,6 +715,8 @@
          * Show completion blocked popup (exposed for use in day pages)
          * This is the hard guard that prevents completion
          */
-        showCompletionBlockedPopup: showCompletionBlockedPopup
+        showCompletionBlockedPopup: showCompletionBlockedPopup,
+        showCompletionBlockedModal: showCompletionBlockedPopup,
+        activateSoftLockPage: activateSoftLockPage
     };
 })();

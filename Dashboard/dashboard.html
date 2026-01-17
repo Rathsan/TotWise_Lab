@@ -8,7 +8,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="dashboard.css">
-    <!-- Soft Day-Locking (for isFutureDay function) -->
+    <!-- TotWise Core (progress + cooldown) -->
+    <script src="/js/totwise-core.js"></script>
+    <!-- Soft Day-Locking (guards + modals) -->
     <script src="/soft-day-lock.js"></script>
 </head>
 <body>
@@ -367,7 +369,7 @@
         </main>
     </div>
 
-    <!-- Soft Lock Modal -->
+    <!-- Soft Lock Modal (disabled: navigation no longer blocks viewing) -->
     <div class="locked-modal" id="lockedModal">
         <div class="locked-modal-content">
             <h2 class="locked-modal-title">This will be ready on its day</h2>
@@ -431,12 +433,12 @@
 
         // Function to update dashboard based on completed days
         function updateDashboard() {
-            // Get completed days from localStorage (using new key naming)
-            const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
+            const completedDays = TotWiseCore.getCompletedDays();
             console.log('Completed days:', completedDays);
             
             // Calculate current day (next unlocked day) using calendar-day cooldown
-            const currentDayLimited = getCurrentUnlockedDay();
+            const { currentUnlockedDay } = TotWiseCore.getProgressState();
+            const currentDayLimited = currentUnlockedDay;
             
             // Update progress count
             const progressCount = document.querySelector('.progress-count');
@@ -527,97 +529,37 @@
             }
         }
         
-        // Function to get current unlocked day
-        function getCurrentUnlockedDay() {
-            if (typeof TotWiseSoftLock !== 'undefined') {
-                return TotWiseSoftLock.getCurrentUnlockedDay();
-            }
-            const completedDays = JSON.parse(localStorage.getItem('totwise.progress.completedDays') || '[]');
-            const currentDay = completedDays.length > 0 ? Math.max(...completedDays) + 1 : 1;
-            return Math.min(currentDay, 30); // Cap at 30
-        }
-
         // Update dashboard and greeting on page load
         updateDashboard();
         updateWelcomeGreeting();
 
-        const lockedModal = document.getElementById('lockedModal');
-        const closeLockedModal = document.getElementById('closeLockedModal');
-        const backToTodayBtn = document.getElementById('backToTodayBtn');
         const daysGrid = document.getElementById('daysGrid');
+
+        function navigateToDay(dayNum) {
+            const protocol = window.location.protocol;
+            const pathname = window.location.pathname;
+            let dayPath = `/member_Day${dayNum}/member-day${dayNum}.html`;
+            
+            if (protocol === 'http:' || protocol === 'https:') {
+                const basePath = pathname.split('/Dashboard')[0];
+                dayPath = `${basePath}/member_Day${dayNum}/member-day${dayNum}.html`;
+            } else {
+                dayPath = `../member_Day${dayNum}/member-day${dayNum}.html`;
+            }
+            
+            window.location.href = dayPath;
+        }
+
+        function onDayClick(clickedDay) {
+            navigateToDay(clickedDay);
+        }
 
         // Handle day clicks
         daysGrid.addEventListener('click', function(e) {
             const dayPill = e.target.closest('.day-pill');
             if (dayPill) {
                 const dayNum = parseInt(dayPill.getAttribute('data-day'));
-                
-                // SINGLE SOURCE OF TRUTH: Use centralized isFutureDay check
-                if (typeof TotWiseSoftLock !== 'undefined' && TotWiseSoftLock.isFutureDay(dayNum)) {
-                    // Future day - show soft lock modal (allow viewing but prevent completion)
-                    lockedModal.classList.add('show');
-                    return;
-                }
-                
-                // Current or completed day - navigate normally
-                const protocol = window.location.protocol;
-                const pathname = window.location.pathname;
-                let dayPath = `/member_Day${dayNum}/member-day${dayNum}.html`;
-                
-                if (protocol === 'http:' || protocol === 'https:') {
-                    const basePath = pathname.split('/Dashboard')[0];
-                    dayPath = `${basePath}/member_Day${dayNum}/member-day${dayNum}.html`;
-                } else {
-                    dayPath = `../member_Day${dayNum}/member-day${dayNum}.html`;
-                }
-                
-                window.location.href = dayPath;
-            }
-        });
-
-        // Back to Today button
-        if (backToTodayBtn) {
-            backToTodayBtn.addEventListener('click', function() {
-                lockedModal.classList.remove('show');
-                const currentUnlockedDay = getCurrentUnlockedDay();
-                const protocol = window.location.protocol;
-                const pathname = window.location.pathname;
-                let todayPath = `/member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
-                
-                if (protocol === 'http:' || protocol === 'https:') {
-                    const basePath = pathname.split('/Dashboard')[0];
-                    todayPath = `${basePath}/member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
-                } else {
-                    todayPath = `../member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
-                }
-                
-                window.location.href = todayPath;
-            });
-        }
-        
-        // Stay on Dashboard button
-        const stayOnDashboardBtn = document.getElementById('stayOnDashboardBtn');
-        if (stayOnDashboardBtn) {
-            stayOnDashboardBtn.addEventListener('click', function() {
-                lockedModal.classList.remove('show');
-            });
-        }
-
-        // Close modal
-        closeLockedModal.addEventListener('click', function() {
-            lockedModal.classList.remove('show');
-        });
-
-        lockedModal.addEventListener('click', function(e) {
-            if (e.target === lockedModal) {
-                lockedModal.classList.remove('show');
-            }
-        });
-
-        // Close on escape
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && lockedModal.classList.contains('show')) {
-                lockedModal.classList.remove('show');
+                onDayClick(dayNum);
             }
         });
 

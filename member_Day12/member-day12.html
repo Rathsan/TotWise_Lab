@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/member_Day1/member.css">
     <script src="/auth/auth.js"></script>
     <!-- Soft Day-Locking -->
+    <script src="/js/totwise-core.js"></script>
     <script src="/soft-day-lock.js"></script>
 </head>
 <body>
@@ -158,13 +159,18 @@
         </div>
     </div>
 
-    <script>
+            <script>
+        // Authentication check - require login to access Day pages
         (function() {
+            // Wait for auth.js to load
             if (typeof TotWiseAuth === 'undefined') {
+                // If auth.js didn't load, check manually
                 const token = sessionStorage.getItem('loginToken');
                 if (!token) {
+                    console.log('❌ Not authenticated, redirecting to login');
                     const protocol = window.location.protocol;
                     const pathname = window.location.pathname;
+                    
                     if (protocol === 'http:' || protocol === 'https:') {
                         const basePath = pathname.split('/member_Day')[0];
                         window.location.href = basePath + '/login/login.html';
@@ -174,10 +180,12 @@
                     return;
                 }
             } else {
+                // Use centralized auth
                 TotWiseAuth.initAuth({ checkURLToken: false, requireAuth: true });
             }
         })();
 
+        // Get current day number from URL or default to 12
         function getCurrentDay() {
             const pathname = window.location.pathname;
             const match = pathname.match(/member-day(\d+)\.html/);
@@ -186,78 +194,108 @@
 
         const currentDay = getCurrentDay();
 
-        // Check and apply soft day-locking if needed
-        if (typeof TotWiseSoftLock !== 'undefined') {
-                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-            TotWiseSoftLock.checkAndApply(currentDay);
-        }
-        const completeBtn = document.getElementById('completeBtn');
-        const completionOverlay = document.getElementById('completionOverlay');
-        const closeModalBtn = document.getElementById('closeModalBtn');
+        (function initDayPage() {
+            TotWiseCore.getProgressState();
 
-        completeBtn.addEventListener('click', function() {
-            // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
-            if (typeof TotWiseSoftLock !== 'undefined') {
-                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                if (TotWiseSoftLock.isFutureDay(currentDay)) {
-                    // Block completion - show popup and return early
-                    TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
-                    return false; // STOP execution - no progress update, no unlock, no nudge
+            function getDashboardPath() {
+                const protocol = window.location.protocol;
+                const pathname = window.location.pathname;
+                if (protocol === 'http:' || protocol === 'https:') {
+                    const basePath = pathname.split('/member_Day')[0];
+                    return basePath + '/Dashboard/dashboard.html';
+                }
+                return '../Dashboard/dashboard.html';
+            }
+
+            function redirectToDashboard() {
+                window.location.href = getDashboardPath();
+            }
+
+            function setupLogout() {
+                const logoutBtn = document.querySelector('.logout-btn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', function() {
+                        if (typeof TotWiseAuth !== 'undefined') {
+                            TotWiseAuth.logout();
+                        } else {
+                            sessionStorage.removeItem('loginToken');
+                            sessionStorage.removeItem('userEmail');
+                            const protocol = window.location.protocol;
+                            const pathname = window.location.pathname;
+                            if (protocol === 'http:' || protocol === 'https:') {
+                                const basePath = pathname.split('/member_Day')[0];
+                                window.location.href = basePath + '/login/login.html';
+                            } else {
+                                window.location.href = '../login/login.html';
+                            }
+                        }
+                    });
                 }
             }
-            this.classList.add('completed');
-            this.innerHTML = `<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Completed</span>`;
-            setTimeout(() => { completionOverlay.classList.add('show'); }, 300);
-        });
 
-        function handleCompletion() {
-            // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
-            if (typeof TotWiseSoftLock !== 'undefined') {
-                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                if (TotWiseSoftLock.isFutureDay(currentDay)) {
-                    // Block completion - show popup and return early
-                    TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
-                    return false; // STOP execution - no progress update, no unlock, no nudge
-                }
-            }
-            completionOverlay.classList.remove('show');
-            if (typeof TotWiseSoftLock !== 'undefined') {
-                TotWiseSoftLock.recordCompletion(currentDay);
-            }
-            const protocol = window.location.protocol;
-            const pathname = window.location.pathname;
-            if (protocol === 'http:' || protocol === 'https:') {
-                const basePath = pathname.split('/member_Day')[0];
-                window.location.href = basePath + '/Dashboard/dashboard.html';
-            } else {
-                window.location.href = '../Dashboard/dashboard.html';
-            }
-        }
-
-        closeModalBtn.addEventListener('click', handleCompletion);
-        completionOverlay.addEventListener('click', function(e) {
-            if (e.target === completionOverlay) handleCompletion();
-        });
-
-        const logoutBtn = document.querySelector('.logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-                if (typeof TotWiseAuth !== 'undefined') {
-                    TotWiseAuth.logout();
-                } else {
-                    sessionStorage.removeItem('loginToken');
-                    sessionStorage.removeItem('userEmail');
-                    const protocol = window.location.protocol;
-                    const pathname = window.location.pathname;
-                    if (protocol === 'http:' || protocol === 'https:') {
-                        const basePath = pathname.split('/member_Day')[0];
-                        window.location.href = basePath + '/login/login.html';
-                    } else {
-                        window.location.href = '../login/login.html';
+            function onCompleteClick() {
+                if (TotWiseCore.isFutureDay(currentDay)) {
+                    if (typeof TotWiseSoftLock !== 'undefined') {
+                        TotWiseSoftLock.showCompletionBlockedModal(currentDay);
                     }
+                    return;
                 }
-            });
-        }
+
+                TotWiseCore.markTodayComplete(currentDay);
+            }
+
+            function attachCompletionHandler() {
+                const completeBtn = document.getElementById('completeBtn');
+                const completionOverlay = document.getElementById('completionOverlay');
+                const closeModalBtn = document.getElementById('closeModalBtn');
+
+                if (!completeBtn || !completionOverlay || !closeModalBtn) {
+                    return;
+                }
+
+                completeBtn.addEventListener('click', function() {
+                    onCompleteClick();
+                    if (TotWiseCore.isFutureDay(currentDay)) {
+                        return;
+                    }
+
+                    this.classList.add('completed');
+                    this.innerHTML = `
+                        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <span>Completed</span>
+                    `;
+
+                    setTimeout(() => {
+                        completionOverlay.classList.add('show');
+                    }, 300);
+                });
+
+                function handleCompletion() {
+                    onCompleteClick();
+                    if (TotWiseCore.isFutureDay(currentDay)) {
+                        return;
+                    }
+
+                    completionOverlay.classList.remove('show');
+
+                    redirectToDashboard();
+                }
+
+                closeModalBtn.addEventListener('click', handleCompletion);
+                completionOverlay.addEventListener('click', function(e) {
+                    if (e.target === completionOverlay) {
+                        handleCompletion();
+                    }
+                });
+            }
+
+            attachCompletionHandler();
+            setupLogout();
+        })();
     </script>
+
+
 </body>
 </html>

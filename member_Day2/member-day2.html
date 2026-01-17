@@ -11,6 +11,7 @@
     <!-- Centralized Authentication -->
     <script src="/auth/auth.js"></script>
     <!-- Soft Day-Locking -->
+    <script src="/js/totwise-core.js"></script>
     <script src="/soft-day-lock.js"></script>
 </head>
 <body>
@@ -270,7 +271,7 @@
         </div>
     </div>
 
-    <script>
+            <script>
         // Authentication check - require login to access Day pages
         (function() {
             // Wait for auth.js to load
@@ -305,126 +306,108 @@
 
         const currentDay = getCurrentDay();
 
-        // Check and apply soft day-locking if needed
-        if (typeof TotWiseSoftLock !== 'undefined') {
-                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-            TotWiseSoftLock.checkAndApply(currentDay);
-        }
+        (function initDayPage() {
+            TotWiseCore.getProgressState();
 
-        // Mark Complete functionality
-        const completeBtn = document.getElementById('completeBtn');
-        const completionOverlay = document.getElementById('completionOverlay');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-
-        completeBtn.addEventListener('click', function() {
-            // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
-            if (typeof TotWiseSoftLock !== 'undefined') {
-                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                if (TotWiseSoftLock.isFutureDay(currentDay)) {
-                    // Block completion - show popup and return early
-                    TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
-                    return false; // STOP execution - no progress update, no unlock, no nudge
-                }
-            }
-            
-            this.classList.add('completed');
-            this.innerHTML = `
-                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <path d="M5 13l4 4L19 7"/>
-                </svg>
-                <span>Completed</span>
-            `;
-            
-            // Show completion modal
-            setTimeout(() => {
-                completionOverlay.classList.add('show');
-            }, 300);
-        });
-
-        closeModalBtn.addEventListener('click', function() {
-            // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
-            if (typeof TotWiseSoftLock !== 'undefined') {
-                const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                if (TotWiseSoftLock.isFutureDay(currentDay)) {
-                    // Block completion - show popup and return early
-                    TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
-                    return false; // STOP execution - no progress update, no unlock, no nudge
-                }
-            }
-            
-            completionOverlay.classList.remove('show');
-            
-            // Mark current day as completed in localStorage
-                if (typeof TotWiseSoftLock !== 'undefined') {
-                TotWiseSoftLock.recordCompletion(currentDay);
-                console.log(`Day ${currentDay} marked as completed`);
-            }
-            // Redirect to dashboard
-            const protocol = window.location.protocol;
-            const pathname = window.location.pathname;
-            
-            if (protocol === 'http:' || protocol === 'https:') {
-                // Extract base path (everything before /member_Day2)
-                const basePath = pathname.split('/member_Day')[0];
-                window.location.href = basePath + '/Dashboard/dashboard.html';
-            } else {
-                // For file:// protocol
-                window.location.href = '../Dashboard/dashboard.html';
-            }
-        });
-
-        completionOverlay.addEventListener('click', function(e) {
-            if (e.target === completionOverlay) {
-                // HARD GUARD: Prevent completion if day is not today (MUST BE FIRST CHECK)
-                if (typeof TotWiseSoftLock !== 'undefined') {
-                    const currentUnlockedDay = TotWiseSoftLock.getCurrentUnlockedDay();
-                    if (TotWiseSoftLock.isFutureDay(currentDay)) {
-                        // Block completion - show popup and return early
-                        TotWiseSoftLock.showCompletionBlockedPopup(currentDay);
-                        return false; // STOP execution - no progress update, no unlock, no nudge
-                    }
-                }
-                
-                completionOverlay.classList.remove('show');
-                
-                // Mark current day as completed in localStorage
-                if (typeof TotWiseSoftLock !== 'undefined') {
-                TotWiseSoftLock.recordCompletion(currentDay);
-                console.log(`Day ${currentDay} marked as completed`);
-            }
-                // Redirect to dashboard
+            function getDashboardPath() {
                 const protocol = window.location.protocol;
                 const pathname = window.location.pathname;
-                
                 if (protocol === 'http:' || protocol === 'https:') {
                     const basePath = pathname.split('/member_Day')[0];
-                    window.location.href = basePath + '/Dashboard/dashboard.html';
-                } else {
-                    window.location.href = '../Dashboard/dashboard.html';
+                    return basePath + '/Dashboard/dashboard.html';
+                }
+                return '../Dashboard/dashboard.html';
+            }
+
+            function redirectToDashboard() {
+                window.location.href = getDashboardPath();
+            }
+
+            function setupLogout() {
+                const logoutBtn = document.querySelector('.logout-btn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', function() {
+                        if (typeof TotWiseAuth !== 'undefined') {
+                            TotWiseAuth.logout();
+                        } else {
+                            sessionStorage.removeItem('loginToken');
+                            sessionStorage.removeItem('userEmail');
+                            const protocol = window.location.protocol;
+                            const pathname = window.location.pathname;
+                            if (protocol === 'http:' || protocol === 'https:') {
+                                const basePath = pathname.split('/member_Day')[0];
+                                window.location.href = basePath + '/login/login.html';
+                            } else {
+                                window.location.href = '../login/login.html';
+                            }
+                        }
+                    });
                 }
             }
-        });
 
-        // Handle logout
-        const logoutBtn = document.querySelector('.logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-                if (typeof TotWiseAuth !== 'undefined') {
-                    TotWiseAuth.logout();
-                } else {
-                    sessionStorage.removeItem('loginToken');
-                    sessionStorage.removeItem('userEmail');
-                    const protocol = window.location.protocol;
-                    const pathname = window.location.pathname;
-                    if (protocol === 'http:' || protocol === 'https:') {
-                        const basePath = pathname.split('/member_Day')[0];
-                        window.location.href = basePath + '/login/login.html';
-                    } else {
-                        window.location.href = '../login/login.html';
+            function onCompleteClick() {
+                if (TotWiseCore.isFutureDay(currentDay)) {
+                    if (typeof TotWiseSoftLock !== 'undefined') {
+                        TotWiseSoftLock.showCompletionBlockedModal(currentDay);
                     }
+                    return;
                 }
-            });
-        }
+
+                TotWiseCore.markTodayComplete(currentDay);
+            }
+
+            function attachCompletionHandler() {
+                const completeBtn = document.getElementById('completeBtn');
+                const completionOverlay = document.getElementById('completionOverlay');
+                const closeModalBtn = document.getElementById('closeModalBtn');
+
+                if (!completeBtn || !completionOverlay || !closeModalBtn) {
+                    return;
+                }
+
+                completeBtn.addEventListener('click', function() {
+                    onCompleteClick();
+                    if (TotWiseCore.isFutureDay(currentDay)) {
+                        return;
+                    }
+
+                    this.classList.add('completed');
+                    this.innerHTML = `
+                        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <span>Completed</span>
+                    `;
+
+                    setTimeout(() => {
+                        completionOverlay.classList.add('show');
+                    }, 300);
+                });
+
+                function handleCompletion() {
+                    onCompleteClick();
+                    if (TotWiseCore.isFutureDay(currentDay)) {
+                        return;
+                    }
+
+                    completionOverlay.classList.remove('show');
+
+                    redirectToDashboard();
+                }
+
+                closeModalBtn.addEventListener('click', handleCompletion);
+                completionOverlay.addEventListener('click', function(e) {
+                    if (e.target === completionOverlay) {
+                        handleCompletion();
+                    }
+                });
+            }
+
+            attachCompletionHandler();
+            setupLogout();
+        })();
     </script>
+
+
 </body>
 </html>
