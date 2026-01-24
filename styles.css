@@ -1031,6 +1031,24 @@ section {
     white-space: nowrap;
 }
 
+.coming-soon-ribbon {
+    position: absolute;
+    top: 12px;
+    right: -54px;
+    width: 180px;
+    text-align: center;
+    background: #D64541;
+    color: #FFFFFF;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 6px 0;
+    transform: rotate(45deg);
+    border: 2px dashed rgba(255, 255, 255, 0.8);
+    box-shadow: 0 6px 16px rgba(45, 59, 58, 0.2);
+    letter-spacing: 0.02em;
+}
+
 .pricing-header h3 {
     font-size: 1.5rem;
     margin-bottom: var(--space-xs);
@@ -1553,6 +1571,12 @@ section {
     .pricing-amount .price {
         font-size: 3rem;
     }
+
+    .coming-soon-ribbon {
+        right: -44px;
+        width: 150px;
+        font-size: 0.8rem;
+    }
 }
 
 /* Animations on scroll (subtle entrance) */
@@ -1597,4 +1621,105 @@ section {
 /* Smooth scroll padding for fixed header */
 html {
     scroll-padding-top: 100px;
+}
+
+/* ====================================
+   Subscription Email Modal
+==================================== */
+.totwise-email-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(45, 59, 58, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    z-index: 10000;
+}
+
+.totwise-email-card {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(45, 59, 58, 0.2);
+}
+
+.totwise-email-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.4rem;
+    color: #2D3B3A;
+    margin-bottom: 0.5rem;
+}
+
+.totwise-email-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: #4A5857;
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+}
+
+.totwise-email-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.totwise-email-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: #2D3B3A;
+}
+
+.totwise-email-input {
+    border: 1px solid #E1E6E4;
+    border-radius: 12px;
+    padding: 0.75rem 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: #2D3B3A;
+    outline: none;
+}
+
+.totwise-email-input:focus {
+    border-color: #A8C5A0;
+    box-shadow: 0 0 0 3px rgba(168, 197, 160, 0.2);
+}
+
+.totwise-email-error {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: #B84C4C;
+    margin-bottom: 0.75rem;
+    display: none;
+}
+
+.totwise-email-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+.totwise-email-btn {
+    border-radius: 999px;
+    padding: 0.65rem 1.5rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+}
+
+.totwise-email-btn-primary {
+    background: #A8C5A0;
+    color: #FFFFFF;
+}
+
+.totwise-email-btn-secondary {
+    background: transparent;
+    color: #2D3B3A;
+    border: 1px solid #A8C5A0;
 }

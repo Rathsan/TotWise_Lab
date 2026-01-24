@@ -349,6 +349,7 @@
                     <a href="#pricing" class="btn btn-age">Get This Toolkit</a>
                 </div>
                 <div class="age-card age-card-older">
+                    <div class="coming-soon-ribbon">Coming soon</div>
                     <div class="age-card-illustration">
                         <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="100" cy="80" r="60" fill="#F0F7EF"/>
@@ -391,7 +392,7 @@
                             Cooperative play & empathy
                         </li>
                     </ul>
-                    <a href="#pricing" class="btn btn-age">Get This Toolkit</a>
+                    <a href="#pricing" class="btn btn-age" data-plan="age_3_4">Get This Toolkit</a>
                 </div>
             </div>
         </div>
@@ -634,10 +635,11 @@
                             Cancel anytime
                         </li>
                     </ul>
-                    <a href="#" class="btn btn-outline btn-full">Start Monthly</a>
+                    <a href="#" class="btn btn-outline btn-full" data-subscribe="age_2_3">Start Monthly</a>
                 </div>
                 <div class="pricing-card pricing-card-featured">
                     <div class="pricing-badge">Best Value — Save 30%</div>
+                    <div class="coming-soon-ribbon">Coming soon</div>
                     <div class="pricing-header">
                         <h3>Annual</h3>
                         <p class="pricing-subtitle">For committed families</p>
@@ -670,7 +672,7 @@
                             Early access to new content
                         </li>
                     </ul>
-                    <a href="#" class="btn btn-primary btn-full">Start Annual & Save</a>
+                    <a href="#" class="btn btn-primary btn-full" data-plan="annual">Start Annual & Save</a>
                 </div>
             </div>
             <div class="pricing-guarantee">
@@ -932,6 +934,25 @@
                 }, 3000);
             }, 1500);
         });
+
+        // Annual plan placeholder
+        const annualBtn = document.querySelector('[data-plan="annual"]');
+        if (annualBtn) {
+            annualBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('The annual plan is coming soon. Please check back shortly.');
+            });
+        }
+
+        const olderToolkitBtn = document.querySelector('[data-plan="age_3_4"]');
+        if (olderToolkitBtn) {
+            olderToolkitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('The 3–4 Years Growth Toolkit is coming soon. Please check back shortly.');
+            });
+        }
     </script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="js/subscribe.js"></script>
 </body>
 </html>

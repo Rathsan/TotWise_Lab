@@ -1,0 +1,571 @@
+/* ====================================
+   TotWise Lab — Magic Link Login Page
+   Calm, Safe, Zero Friction
+   ==================================== */
+
+/* CSS Variables */
+:root {
+    /* Warm Palette */
+    --peach: #E8B4A0;
+    --peach-light: #F5D5C8;
+    --peach-lightest: #FFE5D9;
+    --sage: #A8C5A0;
+    --sage-light: #C8DBC4;
+    --sage-dark: #7BA876;
+    
+    /* Neutrals */
+    --cream: #FFF8F5;
+    --cream-warm: #FFFCFA;
+    --white: #FFFFFF;
+    --slate: #2D3B3A;
+    --slate-light: #4A5857;
+    --slate-muted: #6B7A79;
+    
+    /* Shadows */
+    --shadow-soft: 0 2px 12px rgba(45, 59, 58, 0.06);
+    --shadow-medium: 0 8px 30px rgba(45, 59, 58, 0.08);
+    --shadow-card: 0 12px 40px rgba(45, 59, 58, 0.1);
+    
+    /* Spacing */
+    --space-xs: 0.375rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+}
+
+/* Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--slate);
+    background: var(--cream);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Visually Hidden (for accessibility) */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ====================================
+   LAYOUT CONTAINER
+   ==================================== */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background Decoration */
+.bg-decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.4;
+}
+
+.bg-circle-1 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--sage-light) 0%, transparent 70%);
+    top: -100px;
+    right: -80px;
+}
+
+.bg-circle-2 {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, var(--peach-light) 0%, transparent 70%);
+    bottom: -80px;
+    left: -60px;
+}
+
+.bg-circle-3 {
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, var(--peach-lightest) 0%, transparent 70%);
+    top: 30%;
+    left: 10%;
+    opacity: 0.3;
+}
+
+/* ====================================
+   HEADER
+   ==================================== */
+.login-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    position: relative;
+    z-index: 1;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.brand-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.brand-name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--slate);
+}
+
+.brand-subtitle {
+    font-size: 0.85rem;
+    color: var(--slate-muted);
+    font-weight: 500;
+}
+
+/* ====================================
+   MAIN CARD
+   ==================================== */
+.login-main {
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    z-index: 1;
+}
+
+.login-card {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Card States */
+.card-state {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.card-state.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    position: absolute;
+    pointer-events: none;
+}
+
+.success-state {
+    opacity: 0;
+    transform: translateY(10px);
+    position: absolute;
+    top: var(--space-xl);
+    left: var(--space-xl);
+    right: var(--space-xl);
+    pointer-events: none;
+}
+
+.success-state.visible {
+    opacity: 1;
+    transform: translateY(0);
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    pointer-events: auto;
+}
+
+.login-card.success {
+    min-height: 360px;
+}
+
+/* ====================================
+   WELCOME / FORM STATE
+   ==================================== */
+.welcome-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto var(--space-lg);
+}
+
+.welcome-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.login-card h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--slate);
+    text-align: center;
+    margin-bottom: var(--space-sm);
+    line-height: 1.3;
+}
+
+.emoji {
+    display: inline-block;
+}
+
+.welcome-text {
+    text-align: center;
+    color: var(--slate-muted);
+    font-size: 0.95rem;
+    margin-bottom: var(--space-xl);
+    line-height: 1.5;
+}
+
+/* ====================================
+   FORM
+   ==================================== */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.input-group {
+    width: 100%;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: var(--space-md);
+    width: 20px;
+    height: 20px;
+    color: var(--slate-muted);
+    pointer-events: none;
+    transition: color 0.2s ease;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: var(--space-md);
+    padding-left: calc(var(--space-md) + 20px + var(--space-sm));
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--slate);
+    background: var(--cream);
+    border: 2px solid transparent;
+    border-radius: var(--radius-lg);
+    transition: all 0.2s ease;
+}
+
+.input-wrapper input::placeholder {
+    color: var(--slate-muted);
+}
+
+.input-wrapper input:hover {
+    background: var(--cream-warm);
+    border-color: var(--peach-light);
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    background: var(--white);
+    border-color: var(--peach);
+    box-shadow: 0 0 0 4px rgba(232, 180, 160, 0.15);
+}
+
+.input-wrapper input:focus + .input-icon,
+.input-wrapper:focus-within .input-icon {
+    color: var(--peach);
+}
+
+/* Submit Button */
+.submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--peach) 0%, #D9A592 100%);
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(232, 180, 160, 0.35);
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(232, 180, 160, 0.45);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+.submit-btn:disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-arrow {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.2s ease;
+}
+
+.submit-btn:hover .btn-arrow {
+    transform: translateX(3px);
+}
+
+/* ====================================
+   REASSURANCE
+   ==================================== */
+.reassurance {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(45, 59, 58, 0.06);
+}
+
+.reassurance-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.8rem;
+    color: var(--slate-muted);
+}
+
+.reassurance-item svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* ====================================
+   SUCCESS STATE
+   ==================================== */
+.success-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--space-lg);
+    animation: successPop 0.5s ease-out;
+}
+
+@keyframes successPop {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.success-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.login-card h2 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--slate);
+    text-align: center;
+    margin-bottom: var(--space-sm);
+}
+
+.success-text {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--slate-light);
+    margin-bottom: var(--space-xs);
+}
+
+.success-subtext {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--slate-muted);
+    margin-bottom: var(--space-xl);
+}
+
+/* Resend Button */
+.resend-btn {
+    display: block;
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--sage-dark);
+    background: var(--sage-light);
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.resend-btn:hover {
+    background: var(--sage);
+    color: var(--white);
+}
+
+.resend-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ====================================
+   FOOTER
+   ==================================== */
+.login-footer {
+    margin-top: var(--space-xl);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.login-footer p {
+    font-size: 0.8rem;
+    color: var(--slate-muted);
+}
+
+.login-footer a {
+    color: var(--peach);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.login-footer a:hover {
+    color: #D9A592;
+    text-decoration: underline;
+}
+
+/* ====================================
+   RESPONSIVE
+   ==================================== */
+@media (max-width: 480px) {
+    .login-container {
+        padding: var(--space-md);
+        justify-content: flex-start;
+        padding-top: 15vh;
+    }
+    
+    .login-card {
+        padding: var(--space-lg);
+    }
+    
+    .login-card h1 {
+        font-size: 1.5rem;
+    }
+    
+    .brand-name {
+        font-size: 1.35rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .login-card {
+        padding: var(--space-2xl);
+    }
+    
+    .bg-circle-1 {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .bg-circle-2 {
+        width: 350px;
+        height: 350px;
+    }
+}
+
+/* ====================================
+   ACCESSIBILITY
+   ==================================== */
+:focus-visible {
+    outline: 3px solid var(--peach);
+    outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible),
+input:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Selection */
+::selection {
+    background: var(--peach-light);
+    color: var(--slate);
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark mode hint (optional enhancement) */
+@media (prefers-color-scheme: dark) {
+    /* Could add dark mode support here if needed */
+}

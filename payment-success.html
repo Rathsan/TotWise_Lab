@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful — TotWise Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .payment-success {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: var(--cream-warm, #FFF8F5);
+        }
+        .payment-success-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 12px 30px rgba(45, 59, 58, 0.1);
+        }
+        .payment-success-title {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.8rem;
+            color: #2D3B3A;
+            margin-bottom: 1rem;
+        }
+        .payment-success-text {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            color: #4A5857;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <section class="payment-success">
+        <div class="payment-success-card">
+            <h1 class="payment-success-title">Payment successful.</h1>
+            <p class="payment-success-text">A secure login link has been sent to your email.</p>
+        </div>
+    </section>
+</body>
+</html>

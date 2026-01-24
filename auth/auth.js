@@ -1,155 +1,125 @@
 /**
  * TotWise Lab - Centralized Authentication Logic
- * 
- * This file contains all authentication-related functions to avoid duplication.
- * Import this file in all pages that require authentication.
+ * Backend-verified session + subscription enforcement.
  */
 
 (function() {
     'use strict';
 
-    /**
-     * Get the login page path based on current location
-     * @returns {string} Path to login page
-     */
-    function getLoginPath() {
+    const API_BASE = window.TOTWISE_API_BASE || '';
+
+    function getBasePath() {
         const protocol = window.location.protocol;
         const pathname = window.location.pathname;
-        
-        // If running on a web server (http/https), use absolute path from root
+
         if (protocol === 'http:' || protocol === 'https:') {
-            // Extract the base path (everything before current directory)
-            let basePath = pathname;
-            
-            // Remove current directory from path
             if (pathname.includes('/Dashboard/')) {
-                basePath = pathname.split('/Dashboard')[0];
-            } else if (pathname.includes('/member_Day')) {
-                basePath = pathname.split('/member_Day')[0];
-            } else if (pathname.includes('/login/')) {
-                basePath = pathname.split('/login')[0];
+                return pathname.split('/Dashboard')[0];
             }
-            
-            return basePath + '/login/login.html';
+            if (pathname.includes('/member_Day')) {
+                return pathname.split('/member_Day')[0];
+            }
+            if (pathname.includes('/login/')) {
+                return pathname.split('/login')[0];
+            }
+            return '';
         }
-        
-        // For file:// protocol, use relative path
-        return '../login/login.html';
+
+        return '..';
     }
 
-    /**
-     * Check if user is authenticated
-     * @returns {boolean} True if authenticated, false otherwise
-     */
-    function isAuthenticated() {
-        const token = sessionStorage.getItem('loginToken');
-        return !!token; // Convert to boolean
-    }
-
-    /**
-     * Verify authentication and redirect to login if not authenticated
-     * Call this at the start of any protected page
-     * @param {boolean} allowRedirect - Whether to redirect if not authenticated (default: true)
-     * @returns {boolean} True if authenticated, false otherwise
-     */
-    function requireAuth(allowRedirect = true) {
-        if (!isAuthenticated()) {
-            if (allowRedirect) {
-                console.log('❌ Not authenticated, redirecting to login');
-                window.location.href = getLoginPath();
-            }
-            return false;
+    function getLoginPath() {
+        const basePath = getBasePath();
+        if (basePath === '') {
+            return '/login/login.html';
         }
-        return true;
+        return basePath + '/login/login.html';
     }
 
-    /**
-     * Handle logout - clears session and redirects to login
-     */
-    function logout() {
-        // Clear session storage
-        sessionStorage.removeItem('loginToken');
-        sessionStorage.removeItem('userEmail');
-        
-        // Clear any progress data if needed (optional - you might want to keep progress)
-        // localStorage.removeItem('totwise.progress.completedDays');
-        
-        console.log('Logged out successfully');
-        
-        // Redirect to login
-        window.location.href = getLoginPath();
+    function getSubscribePath() {
+        const basePath = getBasePath();
+        if (basePath === '') {
+            return '/index.html#pricing';
+        }
+        return basePath + '/index.html#pricing';
     }
 
-    /**
-     * Verify token from URL parameters (for email links)
-     * Call this when page loads with token in URL
-     * @returns {boolean} True if token was valid and stored, false otherwise
-     */
-    function verifyTokenFromURL() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        const email = urlParams.get('email');
-        
-        if (token && email && token.length >= 16) {
-            // Basic validation: token should be reasonable length
-            // Decode email in case it's URL encoded
-            const decodedEmail = decodeURIComponent(email);
-            
-            // Store token and email in sessionStorage
-            sessionStorage.setItem('loginToken', token);
-            sessionStorage.setItem('userEmail', decodedEmail);
-            
-            // Clear token from URL for security
-            if (window.history.replaceState) {
-                const cleanUrl = window.location.pathname + '?email=' + encodeURIComponent(decodedEmail);
-                window.history.replaceState({}, document.title, cleanUrl);
+    async function getSessionStatus() {
+        try {
+            const response = await fetch(`${API_BASE}/api/auth/session`, {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            if (response.status === 200) {
+                return { ok: true };
             }
-            
-            console.log('✅ Token verified and stored from URL');
+
+            if (response.status === 403) {
+                return { ok: false, reason: 'inactive' };
+            }
+
+            return { ok: false, reason: 'unauthenticated' };
+        } catch (error) {
+            return { ok: false, reason: 'unauthenticated' };
+        }
+    }
+
+    async function requireAuth() {
+        const status = await getSessionStatus();
+        if (status.ok) {
             return true;
         }
-        
+
+        if (status.reason === 'inactive') {
+            window.location.href = getSubscribePath();
+            return false;
+        }
+
+        window.location.href = getLoginPath();
         return false;
     }
 
-    /**
-     * Initialize authentication check on page load
-     * Call this at the start of protected pages
-     * @param {Object} options - Configuration options
-     * @param {boolean} options.checkURLToken - Check for token in URL (default: true)
-     * @param {boolean} options.requireAuth - Require authentication (default: true)
-     */
-    function initAuth(options = {}) {
+    async function initAuth(options = {}) {
         const {
             checkURLToken = true,
             requireAuth: requireAuthFlag = true
         } = options;
 
-        // First, check if token exists in URL (from email link)
         if (checkURLToken) {
-            const tokenInURL = verifyTokenFromURL();
-            if (tokenInURL) {
-                // Token was in URL and is now stored, allow access
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
+            const email = params.get('email');
+            if (token && email) {
                 return true;
             }
         }
 
-        // If no token in URL, check sessionStorage
         if (requireAuthFlag) {
-            return requireAuth(true);
+            return requireAuth();
         }
 
-        return isAuthenticated();
+        return true;
     }
 
-    // Export functions to window object for global access
+    async function logout() {
+        try {
+            await fetch(`${API_BASE}/api/auth/logout`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+        } catch (error) {
+            console.warn('Logout request failed', error);
+        }
+
+        window.location.href = getLoginPath();
+    }
+
     window.TotWiseAuth = {
-        isAuthenticated,
-        requireAuth,
         logout,
-        verifyTokenFromURL,
         initAuth,
-        getLoginPath
+        getLoginPath,
+        getSubscribePath
     };
 
     console.log('TotWise Auth module loaded');
