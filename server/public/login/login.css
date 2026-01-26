@@ -267,6 +267,20 @@ body {
     margin-bottom: var(--space-lg);
 }
 
+.login-message {
+    margin-top: var(--space-sm);
+    font-size: 0.9rem;
+    color: var(--slate-light);
+    text-align: center;
+}
+
+.login-helper {
+    margin-top: var(--space-xs);
+    font-size: 0.85rem;
+    color: var(--slate-muted);
+    text-align: center;
+}
+
 .input-group {
     width: 100%;
 }

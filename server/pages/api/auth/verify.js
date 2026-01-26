@@ -10,13 +10,13 @@ export default async function handler(req, res) {
 
   const { token, email } = req.body || {};
   if (!token || !email) {
-    return res.status(400).json({ error: 'Missing token or email' });
+    return res.status(400).json({ error: 'Unable to sign in' });
   }
 
   try {
     const user = await getUserByEmail(email);
     if (!user) {
-      return res.status(401).json({ error: 'Invalid link' });
+      return res.status(401).json({ error: 'Unable to sign in' });
     }
 
     const { data: tokenRow, error: tokenError } = await supabaseAdmin
@@ -27,20 +27,20 @@ export default async function handler(req, res) {
       .maybeSingle();
 
     if (tokenError || !tokenRow) {
-      return res.status(401).json({ error: 'Invalid link' });
+      return res.status(401).json({ error: 'Unable to sign in' });
     }
 
     if (tokenRow.used) {
-      return res.status(401).json({ error: 'Link already used' });
+      return res.status(401).json({ error: 'Unable to sign in' });
     }
 
     if (new Date(tokenRow.expires_at).getTime() < Date.now()) {
-      return res.status(401).json({ error: 'Link expired' });
+      return res.status(401).json({ error: 'Unable to sign in' });
     }
 
     const activeSub = await getActiveSubscription(user.id);
     if (!activeSub) {
-      return res.status(403).json({ error: 'No active subscription' });
+      return res.status(403).json({ error: 'Unable to sign in' });
     }
 
     const { error: updateTokenError } = await supabaseAdmin
@@ -64,6 +64,6 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true });
   } catch (error) {
     console.error('[auth] verify error', error);
-    return res.status(500).json({ error: 'Verification failed' });
+    return res.status(500).json({ error: 'Unable to sign in' });
   }
 }

@@ -48,7 +48,7 @@
                     </div>
                     
                     <h1>Welcome back <span class="emoji">🌱</span></h1>
-                    <p class="welcome-text">Enter your email to access your child's TotWise toolkit.</p>
+                    <p class="welcome-text">Enter your email and we’ll take care of the rest.</p>
 
                     <form class="login-form" id="loginForm">
                         <div class="input-group">
@@ -70,12 +70,14 @@
                         </div>
 
                         <button type="submit" class="submit-btn">
-                            <span>Send me a secure login link</span>
+                            <span>Continue</span>
                             <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
                             </svg>
                         </button>
                     </form>
+                    <p class="login-message" id="loginMessage"></p>
+                    <p class="login-helper">No passwords. Secure link sent only if needed.</p>
 
                     <div class="reassurance">
                         <div class="reassurance-item">
@@ -119,12 +121,7 @@
                     </div>
                     
                     <h2>Check your email <span class="emoji">📩</span></h2>
-                    <p class="success-text">Your secure login link is waiting for you.</p>
-                    <p class="success-subtext">It should arrive within a minute. Check your spam folder if you don't see it.</p>
-
-                    <button class="resend-btn" id="resendBtn">
-                        <span>Didn't receive it? Send again</span>
-                    </button>
+                    <p class="success-text">Check your email — your secure login link is on its way 💛</p>
                 </div>
             </div>
         </main>
@@ -144,8 +141,7 @@
         const loginCard = document.getElementById('loginCard');
         const formState = document.getElementById('formState');
         const successState = document.getElementById('successState');
-        const resendBtn = document.getElementById('resendBtn');
-        let userEmail = '';
+        const loginMessage = document.getElementById('loginMessage');
 
         function showSuccess() {
             formState.classList.add('hidden');
@@ -169,8 +165,8 @@
             return '../Dashboard/dashboard.html';
         }
 
-        async function requestLoginLink(email) {
-            const response = await fetch(`${API_BASE}/api/auth/request-link`, {
+        async function loginWithEmail(email) {
+            const response = await fetch(`${API_BASE}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -178,10 +174,9 @@
             });
 
             if (!response.ok) {
-                const data = await response.json().catch(() => ({}));
-                const message = data.error || 'Unable to send login link.';
-                throw new Error(message);
+                return { status: 'error' };
             }
+            return response.json();
         }
 
         async function verifyMagicLink(token, email) {
@@ -193,9 +188,7 @@
             });
 
             if (!response.ok) {
-                const data = await response.json().catch(() => ({}));
-                const message = data.error || 'This link is invalid or expired.';
-                throw new Error(message);
+                throw new Error('Unable to sign in');
             }
         }
 
@@ -209,8 +202,7 @@
                 await verifyMagicLink(token, email);
                 window.location.href = getDashboardPath();
             } catch (error) {
-                alert(error.message);
-                showForm();
+                window.location.href = window.location.pathname;
             }
         }
 
@@ -218,49 +210,35 @@
             e.preventDefault();
             const emailInput = document.getElementById('email');
             const email = emailInput.value.trim();
-            userEmail = email;
 
             if (!email) {
-                alert('Please enter a valid email address');
+                loginMessage.textContent = 'Please enter a valid email address.';
                 return;
             }
 
             const submitBtn = this.querySelector('.submit-btn');
             const originalContent = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
+            submitBtn.innerHTML = '<span>Checking...</span>';
             submitBtn.disabled = true;
+            loginMessage.textContent = 'We’re checking your access now.';
 
             try {
-                await requestLoginLink(email);
+                const result = await loginWithEmail(email);
+                if (result.status === 'logged_in') {
+                    window.location.href = getDashboardPath();
+                    return;
+                }
+                if (result.status === 'no_access') {
+                    loginMessage.textContent = 'We couldn’t find active access for this email.';
+                    submitBtn.innerHTML = originalContent;
+                    submitBtn.disabled = false;
+                    return;
+                }
                 showSuccess();
             } catch (error) {
-                alert(error.message);
+                loginMessage.textContent = 'Please try again in a moment.';
                 submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
-            }
-        });
-
-        resendBtn.addEventListener('click', async function() {
-            if (!userEmail) {
-                showForm();
-                return;
-            }
-
-            const originalText = this.innerHTML;
-            this.innerHTML = '<span>Sending...</span>';
-            this.disabled = true;
-
-            try {
-                await requestLoginLink(userEmail);
-                this.innerHTML = '<span>Link sent!</span>';
-                setTimeout(() => {
-                    this.innerHTML = originalText;
-                    this.disabled = false;
-                }, 3000);
-            } catch (error) {
-                alert(error.message);
-                this.innerHTML = originalText;
-                this.disabled = false;
             }
         });
 
