@@ -1,0 +1,17 @@
+{
+  "name": "totwise-server",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "cookie": "^0.6.0",
+    "jsonwebtoken": "^9.0.2",
+    "next": "^14.2.5",
+    "postmark": "^4.0.0",
+    "razorpay": "^2.9.4"
+  }
+}

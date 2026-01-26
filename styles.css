@@ -358,10 +358,10 @@ section {
    ==================================== */
 .hero {
     position: relative;
-    min-height: 100vh;
+    min-height: 92vh;
     display: flex;
     align-items: center;
-    padding-top: 100px;
+    padding-top: 96px;
     overflow: hidden;
     background: linear-gradient(135deg, var(--cream) 0%, var(--cream-warm) 50%, var(--peach-lightest) 100%);
 }
@@ -407,7 +407,7 @@ section {
 .hero-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-xl);
+    gap: var(--space-lg);
     align-items: center;
 }
 
@@ -428,16 +428,18 @@ section {
 
 .tagline {
     font-family: 'Nunito', sans-serif;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.12em;
     color: var(--sage-dark);
     margin-bottom: var(--space-sm);
 }
 
 .hero-content h1 {
     margin-bottom: var(--space-md);
+    line-height: 1.05;
+    max-width: 560px;
     background: linear-gradient(135deg, var(--slate) 0%, var(--slate-light) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -447,15 +449,21 @@ section {
 .hero-subtitle {
     font-size: 1.2rem;
     color: var(--slate-muted);
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-md);
     max-width: 500px;
+    line-height: 1.7;
+}
+
+.hero-subtitle-secondary {
+    margin-top: calc(var(--space-sm) * -0.35);
+    margin-bottom: var(--space-lg);
 }
 
 .hero-cta {
     display: flex;
     gap: var(--space-sm);
     flex-wrap: wrap;
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-md);
 }
 
 .hero-trust {
@@ -481,7 +489,7 @@ section {
 }
 
 .hero-trust p {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--slate-muted);
 }
 
@@ -506,7 +514,7 @@ section {
 
 .hero-svg {
     width: 100%;
-    max-width: 500px;
+    max-width: 520px;
     margin: 0 auto;
     display: block;
     filter: drop-shadow(0 20px 40px var(--shadow-medium));

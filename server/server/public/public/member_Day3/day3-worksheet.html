@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 3 Worksheet — TotWise Lab</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #FFF8F5;
+            color: #2D3B3A;
+            padding: 20mm;
+            max-width: 210mm;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 18px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #F5D5C8;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2D3B3A;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            color: #7BA876;
+            font-weight: 500;
+            font-style: italic;
+        }
+
+        /* Main Activity Section */
+        .main-activity {
+            margin: 20px 0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2D3B3A;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .shapes-grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            gap: 30px;
+        }
+
+        .shape-item {
+            width: 100%;
+            max-width: 200px;
+            text-align: center;
+        }
+
+        .shape-illustration {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            background: #FFF8F5;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .shape-line {
+            width: 120px;
+            height: 8px;
+            background: #2D3B3A;
+            border-radius: 4px;
+            margin: 0 auto;
+        }
+
+        .shape-dot {
+            width: 30px;
+            height: 30px;
+            background: #2D3B3A;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+
+        .shape-circle {
+            width: 80px;
+            height: 80px;
+            border: 8px solid #2D3B3A;
+            border-radius: 50%;
+            margin: 0 auto;
+            background: transparent;
+        }
+
+        /* Interaction Area */
+        .interaction-area {
+            margin: 35px 0;
+            text-align: center;
+        }
+
+        .open-space {
+            width: 100%;
+            height: 120px;
+            border: 3px dashed #A8C5A0;
+            border-radius: 12px;
+            margin: 20px auto;
+            background: #F0F7EF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .interaction-label {
+            font-size: 14px;
+            color: #7BA876;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        /* Parent Script Box */
+        .parent-script {
+            background: #F0F7EF;
+            border: 2px solid #A8C5A0;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .script-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .script-icon {
+            width: 24px;
+            height: 24px;
+            fill: #7BA876;
+        }
+
+        .script-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2D3B3A;
+        }
+
+        .script-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .script-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 15px;
+            color: #2D3B3A;
+        }
+
+        .script-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #A8C5A0;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        /* Reassurance Strip */
+        .reassurance-strip {
+            background: linear-gradient(135deg, #FFF8F5 0%, #F0F7EF 100%);
+            border-top: 3px solid #E8B4A0;
+            border-bottom: 3px solid #E8B4A0;
+            padding: 20px;
+            margin-top: 35px;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .reassurance-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2D3B3A;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .reassurance-text {
+            font-size: 13px;
+            color: #5A6B6A;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 15mm;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+
+        /* Download Button (for web view) */
+        .download-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #A8C5A0;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 1000;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .download-btn:hover {
+            background: #7BA876;
+        }
+    </style>
+</head>
+<body>
+    <!-- Download Button (hidden when printing) -->
+    <button class="download-btn no-print" onclick="window.print()">🖨️ Print / Save PDF</button>
+
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Day 3 — Copy Me</h1>
+        <p class="subtitle">Watching or scribbling is enough 💛</p>
+    </div>
+
+    <!-- Main Activity Section -->
+    <div class="main-activity">
+        <h2 class="section-title">Let's copy together</h2>
+        
+        <div class="shapes-grid">
+            <div class="shape-item">
+                <div class="shape-illustration">
+                    <div class="shape-line"></div>
+                </div>
+            </div>
+            
+            <div class="shape-item">
+                <div class="shape-illustration">
+                    <div class="shape-dot"></div>
+                </div>
+            </div>
+            
+            <div class="shape-item">
+                <div class="shape-illustration">
+                    <div class="shape-circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interaction Area -->
+    <div class="interaction-area">
+        <div class="open-space"></div>
+        <p class="interaction-label">Copy, trace, or scribble</p>
+    </div>
+
+    <!-- Parent Script Box -->
+    <div class="parent-script">
+        <div class="script-header">
+            <svg class="script-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+            </svg>
+            <h3 class="script-title">What to say:</h3>
+        </div>
+        <ul class="script-list">
+            <li>"I'm drawing."</li>
+            <li>"You're watching."</li>
+            <li>"You did it!"</li>
+        </ul>
+    </div>
+
+    <!-- Reassurance Strip -->
+    <div class="reassurance-strip">
+        <p class="reassurance-title">
+            <span>✨</span>
+            <span>Reminder for you:</span>
+        </p>
+        <p class="reassurance-text">
+            Copying comes before speaking. Watching today still builds the brain.
+        </p>
+    </div>
+
+    <script>
+        // Auto-trigger print dialog when page loads (optional - can be removed)
+        // Uncomment the line below if you want automatic print dialog
+        // window.onload = function() { window.print(); };
+    </script>
+</body>
+</html>
