@@ -1,0 +1,704 @@
+/* ====================================
+   TotWise Lab — Member Dashboard
+   Calm, Focused, Mobile-First
+   ==================================== */
+
+/* CSS Variables */
+:root {
+    /* Warm Palette */
+    --peach: #E8B4A0;
+    --peach-light: #F5D5C8;
+    --peach-lightest: #FFE5D9;
+    --sage: #A8C5A0;
+    --sage-light: #C8DBC4;
+    --sage-dark: #7BA876;
+    --sage-bg: #F0F7EF;
+    
+    /* Neutrals */
+    --cream: #FFF8F5;
+    --cream-warm: #FFFCFA;
+    --white: #FFFFFF;
+    --slate: #2D3B3A;
+    --slate-light: #4A5857;
+    --slate-muted: #6B7A79;
+    --slate-faint: #B8C4C3;
+    
+    /* Shadows */
+    --shadow-soft: 0 2px 12px rgba(45, 59, 58, 0.06);
+    --shadow-medium: 0 4px 20px rgba(45, 59, 58, 0.08);
+    --shadow-card: 0 8px 32px rgba(45, 59, 58, 0.1);
+    
+    /* Spacing */
+    --space-xs: 0.375rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+}
+
+/* Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--slate);
+    background: var(--cream);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* App Container */
+.app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--cream-warm);
+}
+
+/* ====================================
+   HEADER
+   ==================================== */
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--white);
+    border-bottom: 1px solid rgba(45, 59, 58, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.brand-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.brand-name {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--slate);
+}
+
+.toolkit-label {
+    font-size: 0.7rem;
+    color: var(--slate-muted);
+    font-weight: 500;
+}
+
+.logout-btn {
+    font-size: 0.75rem;
+    color: var(--slate-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+    color: var(--slate);
+    background: var(--cream);
+}
+
+/* ====================================
+   MAIN CONTENT
+   ==================================== */
+.content {
+    padding: var(--space-lg);
+    padding-bottom: var(--space-xl);
+}
+
+/* ====================================
+   WELCOME STRIP
+   ==================================== */
+.welcome-strip {
+    background: linear-gradient(135deg, var(--peach-lightest) 0%, var(--peach-light) 100%);
+    border-radius: var(--radius-xl);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.welcome-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.welcome-wave {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.welcome-text {
+    flex: 1;
+}
+
+.welcome-greeting {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--slate);
+    margin-bottom: 2px;
+}
+
+.welcome-message {
+    font-size: 0.9rem;
+    color: var(--slate-light);
+}
+
+/* ====================================
+   TODAY'S FOCUS CARD
+   ==================================== */
+.today-card {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-card);
+    margin-bottom: var(--space-lg);
+    border: 2px solid var(--sage-light);
+}
+
+.today-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: var(--sage-bg);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-md);
+}
+
+.today-badge svg {
+    width: 16px;
+    height: 16px;
+}
+
+.today-badge span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--sage-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.today-header {
+    display: flex;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid rgba(45, 59, 58, 0.06);
+}
+
+.day-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, var(--sage-bg) 0%, var(--sage-light) 100%);
+    padding: var(--space-md) var(--space-lg);
+    border-radius: var(--radius-lg);
+    min-width: 80px;
+}
+
+.day-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--sage-dark);
+    font-weight: 600;
+}
+
+.day-number {
+    font-family: 'Nunito', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--sage-dark);
+    line-height: 1;
+}
+
+.day-total {
+    font-size: 0.7rem;
+    color: var(--slate-muted);
+}
+
+.today-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-sm);
+    flex: 1;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.85rem;
+    color: var(--slate-light);
+}
+
+.detail-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--sage);
+    flex-shrink: 0;
+}
+
+/* Activity Preview */
+.today-activity {
+    margin-bottom: var(--space-lg);
+}
+
+.activity-preview {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    background: var(--cream);
+    padding: var(--space-md);
+    border-radius: var(--radius-lg);
+}
+
+.activity-emoji {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.activity-info h3 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--slate);
+    margin-bottom: 2px;
+}
+
+.activity-info p {
+    font-size: 0.8rem;
+    color: var(--slate-muted);
+    line-height: 1.4;
+}
+
+/* Start Button */
+.start-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--peach) 0%, #D9A592 100%);
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(232, 180, 160, 0.4);
+}
+
+.start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(232, 180, 160, 0.5);
+}
+
+.start-btn:active {
+    transform: translateY(0);
+}
+
+.btn-arrow {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+}
+
+.start-btn:hover .btn-arrow {
+    transform: translateX(4px);
+}
+
+/* ====================================
+   30-DAY JOURNEY
+   ==================================== */
+.journey-section {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-soft);
+    margin-bottom: var(--space-lg);
+}
+
+.journey-header {
+    margin-bottom: var(--space-lg);
+}
+
+.journey-header h2 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--slate);
+    margin-bottom: 2px;
+}
+
+.journey-subtitle {
+    font-size: 0.85rem;
+    color: var(--slate-muted);
+}
+
+/* Days Grid */
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-sm);
+}
+
+.day-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    background: var(--cream);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.day-num {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--slate-muted);
+    line-height: 1;
+}
+
+.day-status {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.day-status svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* Active Day */
+.day-pill.active {
+    background: var(--sage-bg);
+    border-color: var(--sage);
+}
+
+.day-pill.active .day-num {
+    color: var(--sage-dark);
+}
+
+.day-pill.active:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(168, 197, 160, 0.3);
+}
+
+/* Completed Day */
+.day-pill.completed {
+    background: var(--sage);
+}
+
+.day-pill.completed .day-num {
+    color: var(--white);
+}
+
+.day-pill.completed .day-status svg {
+    color: var(--white);
+}
+
+/* Locked Day */
+.day-pill.locked {
+    background: var(--cream-warm);
+    opacity: 0.7;
+}
+
+.day-pill.locked .day-num {
+    color: var(--slate-faint);
+}
+
+.day-pill.locked .day-status {
+    color: var(--slate-faint);
+}
+
+.day-pill.locked:hover {
+    opacity: 0.9;
+    background: var(--cream);
+}
+
+/* ====================================
+   PROGRESS SECTION
+   ==================================== */
+.progress-section {
+    background: var(--sage-bg);
+    border-radius: var(--radius-xl);
+    padding: var(--space-lg);
+}
+
+.progress-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.progress-icon {
+    flex-shrink: 0;
+}
+
+.progress-icon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.progress-text {
+    flex: 1;
+}
+
+.progress-count {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--slate);
+    margin-bottom: 2px;
+}
+
+.progress-note {
+    font-size: 0.8rem;
+    color: var(--sage-dark);
+    font-style: italic;
+}
+
+/* ====================================
+   LOCKED DAY MODAL
+   ==================================== */
+.locked-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(45, 59, 58, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.locked-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.locked-modal-content {
+    background: var(--white);
+    padding: var(--space-xl);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    max-width: 320px;
+    width: 100%;
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 20px 60px rgba(45, 59, 58, 0.2);
+}
+
+.locked-modal.show .locked-modal-content {
+    transform: scale(1) translateY(0);
+}
+
+.locked-modal-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--slate);
+    margin-bottom: var(--space-md);
+    line-height: 1.4;
+}
+
+.locked-modal-text {
+    font-size: 1rem;
+    color: var(--slate);
+    margin-bottom: var(--space-xs);
+    line-height: 1.6;
+}
+
+.locked-modal-actions {
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-md);
+}
+
+.locked-modal-primary {
+    width: 100%;
+    padding: var(--space-sm) var(--space-xl);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    background: var(--sage);
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: var(--space-sm);
+}
+
+.locked-modal-primary:hover {
+    background: var(--sage-dark);
+    transform: translateY(-1px);
+}
+
+.locked-modal-close {
+    padding: var(--space-xs) var(--space-lg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--slate-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.locked-modal-close:hover {
+    color: var(--slate);
+}
+
+.locked-modal-secondary {
+    padding: var(--space-sm) var(--space-lg);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--slate);
+    background: transparent;
+    border: 2px solid var(--sage);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: var(--space-sm);
+}
+
+.locked-modal-secondary:hover {
+    background: var(--sage-bg);
+    border-color: var(--sage-dark);
+}
+
+@media (min-width: 480px) {
+    .locked-modal-actions {
+        display: flex;
+        flex-direction: row;
+        gap: var(--space-sm);
+        justify-content: center;
+    }
+    
+    .locked-modal-secondary {
+        margin-top: 0;
+    }
+}
+
+/* ====================================
+   RESPONSIVE
+   ==================================== */
+@media (min-width: 600px) {
+    .app-container {
+        margin-top: var(--space-lg);
+        margin-bottom: var(--space-lg);
+        border-radius: var(--radius-xl);
+        box-shadow: 0 0 60px rgba(45, 59, 58, 0.1);
+        min-height: calc(100vh - var(--space-lg) * 2);
+    }
+    
+    .app-header {
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+}
+
+@media (max-width: 360px) {
+    .days-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+    
+    .today-header {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+    
+    .day-indicator {
+        flex-direction: row;
+        gap: var(--space-sm);
+        padding: var(--space-sm) var(--space-md);
+        width: fit-content;
+    }
+    
+    .day-number {
+        font-size: 1.5rem;
+    }
+}
+
+/* ====================================
+   ACCESSIBILITY
+   ==================================== */
+:focus-visible {
+    outline: 3px solid var(--sage);
+    outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Selection */
+::selection {
+    background: var(--peach-light);
+    color: var(--slate);
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
