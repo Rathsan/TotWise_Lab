@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 
 export default function AuthCallback() {
   const router = useRouter();
@@ -10,7 +10,22 @@ export default function AuthCallback() {
       const params = new URLSearchParams(window.location.search);
       const token = params.get('token');
       const email = params.get('email');
-      if (!token || !email) {\n        router.replace('/auth/login');\n        return;\n      }\n      const response = await fetch('/api/free-guide/verify', {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify({ token, email })\n      });\n      const data = await response.json().catch(() => ({}));\n      if (data.status === 'paid') {\n        router.replace('/paid');\n        return;\n      }\n      if (data.status === 'free') {\n        router.replace('/free-guide');\n        return;\n      }\n      router.replace('/auth/login');\n    }\n    verify();\n  }, [router]);
+      if (!token || !email) {
+        router.replace('/auth/login');
+        return;      }
+      const response = await fetch('/api/free-guide/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, email })});      
+      const data = await response.json().catch(() => ({}));
+      if (data.status === 'paid') {
+        router.replace('/paid');
+        return;}
+      if (data.status === 'free') {
+        router.replace('/free-guide');
+        return;}      
+        router.replace('/auth/login');}
+        verify();  }, [router]);
 
   return (
     <>

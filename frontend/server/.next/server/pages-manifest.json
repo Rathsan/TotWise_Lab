@@ -1,6 +1,1 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/api/checkout": "pages/api/checkout.js"
-}
+{"/_error":"pages/_error.js","/api/auth/login":"pages/api/auth/login.js","/_app":"pages/_app.js","/api/auth/session":"pages/api/auth/session.js","/api/auth/logout":"pages/api/auth/logout.js","/api/auth/verify":"pages/api/auth/verify.js","/api/auth/request-link":"pages/api/auth/request-link.js","/api/checkout":"pages/api/checkout.js","/api/free-guide/complete":"pages/api/free-guide/complete.js","/api/free-guide/login":"pages/api/free-guide/login.js","/auth/callback":"pages/auth/callback.html","/auth/login":"pages/auth/login.html","/auth/no-access":"pages/auth/no-access.html","/auth/pending":"pages/auth/pending.html","/company/about-us":"pages/company/about-us.html","/company/contact":"pages/company/contact.html","/company/help-center":"pages/company/help-center.html","/company/our-story":"pages/company/our-story.html","/free-guide/callback":"pages/free-guide/callback.html","/free-guide/day1":"pages/free-guide/day1.html","/free-guide/day2":"pages/free-guide/day2.html","/free-guide/day3":"pages/free-guide/day3.html","/free-guide":"pages/free-guide.html","/api/free-guide/verify":"pages/api/free-guide/verify.js","/api/free-guide/session":"pages/api/free-guide/session.js","/privacy":"pages/privacy.html","/terms":"pages/terms.html","/paid":"pages/paid.js","/":"pages/index.js","/api/webhooks/razorpay":"pages/api/webhooks/razorpay.js","/_document":"pages/_document.js","/404":"pages/404.html"}
