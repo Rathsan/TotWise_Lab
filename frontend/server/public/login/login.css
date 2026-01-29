@@ -274,6 +274,11 @@ body {
     text-align: center;
 }
 
+.login-message.error {
+    color: #B84C4C;
+    font-weight: 600;
+}
+
 .login-helper {
     margin-top: var(--space-xs);
     font-size: 0.85rem;

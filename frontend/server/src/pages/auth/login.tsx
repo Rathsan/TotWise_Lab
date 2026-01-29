@@ -6,6 +6,7 @@ export default function AuthLogin() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [isError, setIsError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [autoSent, setAutoSent] = useState(false);
   const autoSendGuard = useRef(false);
@@ -19,6 +20,7 @@ export default function AuthLogin() {
       setAutoSent(true);
       setSubmitting(true);
       setMessage('We’ll check your access and sign you in.');
+      setIsError(false);
       fetch('/api/free-guide/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -30,10 +32,12 @@ export default function AuthLogin() {
         }
         if (data.status === 'no_access') {
           setMessage('We couldn’t find active access for this email.');
+          setIsError(true);
           setSubmitting(false);
           return;
         }
         setMessage('Check your email — your secure login link is on its way 💛');
+        setIsError(false);
         setSubmitting(false);
       });
     }
@@ -44,6 +48,7 @@ export default function AuthLogin() {
     if (!email) return;
     setSubmitting(true);
     setMessage('We’ll check your access and sign you in.');
+    setIsError(false);
     router.replace('/auth/pending');
     const response = await fetch('/api/free-guide/login', {
       method: 'POST',
@@ -56,7 +61,9 @@ export default function AuthLogin() {
       return;
     }
     if (data.status === 'no_access') {
-      router.replace('/auth/no-access');
+      setMessage('We couldn’t find active access for this email.');
+      setIsError(true);
+      setSubmitting(false);
       return;
     }
     if (!response.ok) {
@@ -99,7 +106,7 @@ export default function AuthLogin() {
                 <span>{submitting ? 'Checking…' : 'Continue'}</span>
               </button>
             </form>
-            <p className="login-message">{message}</p>
+            <p className={`login-message${isError ? ' error' : ''}`}>{message}</p>
             <p className="login-helper">No passwords. Secure link sent only if needed.</p>
           </div>
         </main>
