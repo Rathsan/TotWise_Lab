@@ -20,10 +20,12 @@
                     <div class="totwise-email-field">
                         <label class="totwise-email-label" for="totwiseEmailInput">Email address</label>
                         <input class="totwise-email-input" id="totwiseEmailInput" type="email" placeholder="you@email.com" autocomplete="email" />
+                        <p class="totwise-email-hint">Please type carefully. Copy is disabled for safety.</p>
                     </div>
                     <div class="totwise-email-field">
                         <label class="totwise-email-label" for="totwiseEmailConfirmInput">Confirm email address</label>
                         <input class="totwise-email-input" id="totwiseEmailConfirmInput" type="email" placeholder="you@email.com" autocomplete="email" />
+                        <p class="totwise-email-hint">Paste is disabled. Please retype to confirm.</p>
                     </div>
                     <div class="totwise-email-error" id="totwiseEmailError"></div>
                     <div class="totwise-email-actions">
@@ -79,6 +81,10 @@
             });
 
             emailInput.focus();
+
+            emailInput.addEventListener('copy', (event) => event.preventDefault());
+            emailInput.addEventListener('cut', (event) => event.preventDefault());
+            confirmInput.addEventListener('paste', (event) => event.preventDefault());
         });
     }
 

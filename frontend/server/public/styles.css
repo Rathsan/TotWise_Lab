@@ -2579,6 +2579,13 @@ html {
     display: none;
 }
 
+.totwise-email-hint {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    color: #7A8A89;
+    margin-top: 0.35rem;
+}
+
 .totwise-email-actions {
     display: flex;
     gap: 0.75rem;
