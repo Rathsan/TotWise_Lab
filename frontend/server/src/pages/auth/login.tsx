@@ -2,6 +2,9 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
+// Authorization Login Page
+// This page is used to login to the application using a magic link.
+
 export default function AuthLogin() {
   const router = useRouter();
   const [email, setEmail] = useState('');
