@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { getSessionToken, verifySession } from '../../../../lib/session';
+import { clearSessionCookie, getSessionToken, verifySession } from '../../../../lib/session';
 import { getActiveSubscription, getUserByEmail } from '../../../../lib/subscription';
 import { isValidEmail } from '../../../../lib/validate';
 import { supabaseAdmin } from '../../../../lib/supabaseAdmin';
@@ -24,6 +24,10 @@ export default async function handler(req, res) {
   if (sessionToken) {
     try {
       const payload = verifySession(sessionToken);
+      if (payload?.email && email && payload.email.toLowerCase() !== email.toLowerCase()) {
+        clearSessionCookie(res);
+        return res.status(200).json({ status: 'no_access' });
+      }
       const activeSub = await getActiveSubscription(payload.userId);
       if (activeSub) {
         return res.status(200).json({ status: 'logged_in' });
