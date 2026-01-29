@@ -155,6 +155,11 @@
             loginCard.classList.remove('success');
         }
 
+        function setMessage(text, isError) {
+            loginMessage.textContent = text;
+            loginMessage.classList.toggle('error', Boolean(isError));
+        }
+
         function getDashboardPath() {
             const protocol = window.location.protocol;
             const pathname = window.location.pathname;
@@ -212,7 +217,7 @@
             const email = emailInput.value.trim();
 
             if (!email) {
-                loginMessage.textContent = 'Please enter a valid email address.';
+                setMessage('Please enter a valid email address.', true);
                 return;
             }
 
@@ -220,7 +225,7 @@
             const originalContent = submitBtn.innerHTML;
             submitBtn.innerHTML = '<span>Checking...</span>';
             submitBtn.disabled = true;
-            loginMessage.textContent = 'We’re checking your access now.';
+            setMessage('We’re checking your access now.', false);
 
             try {
                 const result = await loginWithEmail(email);
@@ -229,14 +234,14 @@
                     return;
                 }
                 if (result.status === 'no_access') {
-                    loginMessage.textContent = 'We couldn’t find active access for this email.';
+                    setMessage('We couldn’t find active access for this email.', true);
                     submitBtn.innerHTML = originalContent;
                     submitBtn.disabled = false;
                     return;
                 }
                 showSuccess();
             } catch (error) {
-                loginMessage.textContent = 'Please try again in a moment.';
+                setMessage('Please try again in a moment.', true);
                 submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
             }
