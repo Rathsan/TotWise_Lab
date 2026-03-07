@@ -13,9 +13,9 @@ export function Header({ showFreeGuide = true }: HeaderProps) {
   return (
     <header className="site-header">
       <nav className="site-nav">
-        <Link href="/" className="site-logo">
+        <a href="/index.html" className="site-logo">
           TotWise Lab
-        </Link>
+        </a>
         <div className="site-nav-links">
           {subscription ? (
             <>
