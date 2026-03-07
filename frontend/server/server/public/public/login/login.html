@@ -202,7 +202,20 @@
                 await verifyMagicLink(token, email);
                 window.location.href = getDashboardPath();
             } catch (error) {
-                window.location.href = window.location.pathname;
+                const emailInput = document.getElementById('email');
+                if (emailInput && email) {
+                    try {
+                        emailInput.value = decodeURIComponent(email);
+                    } catch (_) {
+                        emailInput.value = email;
+                    }
+                }
+                showForm();
+                loginMessage.textContent = 'This secure link has expired or already been used. Please enter your email to get a new link.';
+                loginMessage.classList.add('error');
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname);
+                }
             }
         }
 
