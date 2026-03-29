@@ -1810,6 +1810,13 @@ section {
     margin: 0 auto var(--space-xl);
 }
 
+.pricing-cards.pricing-cards-single {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .pricing-card {
     background: var(--cream-warm);
     padding: var(--space-lg);
