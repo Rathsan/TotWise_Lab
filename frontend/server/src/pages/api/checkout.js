@@ -1,5 +1,5 @@
 import { razorpay } from '../../../lib/razorpay';
-import { isValidEmail, PLAN_ID, PLAN_AMOUNT_INR, PLAN_AMOUNT_PAISE } from '../../../lib/validate';
+import { isValidEmail, PLANS, VALID_PLAN_IDS } from '../../../lib/validate';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -7,20 +7,27 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email } = req.body || {};
+  const { email, planId = 'age_2_3' } = req.body || {};
+
   if (!isValidEmail(email)) {
     return res.status(400).json({ error: 'Valid email is required' });
   }
 
+  if (!VALID_PLAN_IDS.includes(planId)) {
+    return res.status(400).json({ error: 'Invalid plan selected' });
+  }
+
+  const plan = PLANS[planId];
+
   try {
     const order = await razorpay.orders.create({
-      amount: PLAN_AMOUNT_PAISE,
+      amount: plan.amountPaise,
       currency: 'INR',
       receipt: `tw_${Date.now()}`,
       notes: {
         email,
-        plan: PLAN_ID,
-        amount: String(PLAN_AMOUNT_INR)
+        plan: planId,
+        amount: String(plan.amount)
       }
     });
 
@@ -30,7 +37,7 @@ export default async function handler(req, res) {
       currency: order.currency,
       keyId: process.env.RAZORPAY_KEY_ID,
       email,
-      plan: PLAN_ID
+      plan: planId
     });
   } catch (error) {
     console.error('[checkout] Razorpay order error', error);

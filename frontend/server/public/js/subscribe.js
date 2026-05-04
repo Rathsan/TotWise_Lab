@@ -3,7 +3,7 @@
     'use strict';
 
     const API_BASE = window.TOTWISE_API_BASE || '';
-    const SUBSCRIBE_SELECTOR = '[data-subscribe="age_2_3"]';
+    const SUBSCRIBE_SELECTOR = '[data-subscribe]';
 
     function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
@@ -88,11 +88,11 @@
         });
     }
 
-    async function createOrder(email) {
+    async function createOrder(email, planId) {
         const response = await fetch(`${API_BASE}/api/checkout`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ email, planId })
         });
 
         if (!response.ok) {
@@ -136,11 +136,12 @@
 
     async function handleSubscribeClick(event) {
         event.preventDefault();
+        const planId = event.currentTarget.dataset.subscribe || 'age_2_3';
         const email = await promptForEmail();
         if (!email) return;
 
         try {
-            const orderData = await createOrder(email);
+            const orderData = await createOrder(email, planId);
             openRazorpayCheckout(orderData);
         } catch (error) {
             alert(error.message || 'Unable to start checkout.');
