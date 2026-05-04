@@ -3,49 +3,408 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Successful — TotWise Lab</title>
+    <title>Welcome to TotWise Lab &#x2014; You&rsquo;re In!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        .payment-success {
+        :root {
+            --peach: #E8B4A0;
+            --peach-light: #F5D5C8;
+            --sage: #A8C5A0;
+            --sage-dark: #7BA876;
+            --cream: #FFF8F5;
+            --slate: #2D3B3A;
+            --slate-light: #4A5857;
+            --slate-muted: #6B7A79;
+            --white: #FFFFFF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 2rem 1rem 4rem;
+        }
+
+        /* Confetti strip */
+        .confetti-strip {
+            width: 100%;
+            max-width: 560px;
+            height: 6px;
+            background: linear-gradient(90deg, #A8C5A0, #E8B4A0, #F5D5C8, #A8C5A0, #E8B4A0);
+            border-radius: 99px;
+            margin-bottom: 2rem;
+            animation: shimmer 2.5s linear infinite;
+            background-size: 200% 100%;
+        }
+
+        @keyframes shimmer {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* Main card */
+        .success-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            max-width: 560px;
+            width: 100%;
+            box-shadow: 0 12px 40px rgba(45,59,58,0.1);
+        }
+
+        /* Success badge */
+        .success-badge {
+            width: 72px;
+            height: 72px;
+            background: #E8F5E9;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
-            background: var(--cream-warm, #FFF8F5);
+            margin: 0 auto 1.25rem;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-        .payment-success-card {
-            background: #FFFFFF;
-            border-radius: 20px;
-            padding: 2.5rem;
-            max-width: 520px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 12px 30px rgba(45, 59, 58, 0.1);
+
+        @keyframes popIn {
+            0%   { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
-        .payment-success-title {
+
+        .success-badge svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .success-title {
             font-family: 'Nunito', sans-serif;
-            font-size: 1.8rem;
-            color: #2D3B3A;
-            margin-bottom: 1rem;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--slate);
+            text-align: center;
+            margin-bottom: 0.5rem;
         }
-        .payment-success-text {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 1rem;
-            color: #4A5857;
+
+        .success-subtitle {
+            font-size: 0.95rem;
+            color: var(--slate-muted);
+            text-align: center;
             line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* Steps */
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-bottom: 2rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #F5F5F5;
+            position: relative;
+        }
+
+        .step:last-child {
+            border-bottom: none;
+        }
+
+        .step-num {
+            min-width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: var(--peach-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--slate);
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .step-num.done {
+            background: var(--sage);
+            color: var(--white);
+        }
+
+        .step-body strong {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--slate);
+            margin-bottom: 0.2rem;
+        }
+
+        .step-body p {
+            font-size: 0.875rem;
+            color: var(--slate-muted);
+            line-height: 1.55;
+        }
+
+        .step-body p a {
+            color: var(--sage-dark);
+            text-decoration: underline;
+        }
+
+        /* Email highlight box */
+        .email-box {
+            background: #F0F7EF;
+            border: 1px solid #C8DBC4;
+            border-radius: 10px;
+            padding: 0.6rem 0.9rem;
+            font-size: 0.85rem;
+            color: var(--slate);
+            margin-top: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .email-box svg {
+            flex-shrink: 0;
+            color: var(--sage-dark);
+        }
+
+        /* WhatsApp CTA */
+        .whatsapp-section {
+            background: #E8F5E9;
+            border: 1px solid #C8E6C9;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .whatsapp-section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #2E7D32;
+            margin-bottom: 0.5rem;
+        }
+
+        .whatsapp-section h3 {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--slate);
+            margin-bottom: 0.4rem;
+        }
+
+        .whatsapp-section p {
+            font-size: 0.875rem;
+            color: var(--slate-muted);
+            margin-bottom: 1rem;
+            line-height: 1.55;
+        }
+
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #25D366;
+            color: var(--white);
+            padding: 0.85rem 1.75rem;
+            border-radius: 99px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+        }
+
+        .btn-whatsapp:hover {
+            background: #20c15e;
+            transform: translateY(-1px);
+        }
+
+        .btn-whatsapp svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .whatsapp-members {
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            color: #4CAF50;
+            font-weight: 600;
+        }
+
+        /* Primary CTA */
+        .btn-dashboard {
+            display: block;
+            text-align: center;
+            background: var(--sage);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border-radius: 99px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: 0 4px 16px rgba(168,197,160,0.4);
+        }
+
+        .btn-dashboard:hover {
+            background: var(--sage-dark);
+            transform: translateY(-1px);
+        }
+
+        .cta-note {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--slate-muted);
+        }
+
+        /* Brand footer */
+        .brand-footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--slate-muted);
+        }
+
+        .brand-footer strong {
+            color: var(--slate);
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: #F0F0F0;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 480px) {
+            .success-card { padding: 2rem 1.25rem; }
+            .success-title { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
-    <section class="payment-success">
-        <div class="payment-success-card">
-            <h1 class="payment-success-title">Payment successful.</h1>
-            <p class="payment-success-text">A secure login link has been sent to your email.</p>
+
+    <div class="confetti-strip"></div>
+
+    <div class="success-card">
+
+        <!-- Success badge -->
+        <div class="success-badge">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="18" cy="18" r="17" fill="#A8C5A0"/>
+                <path d="M10 18l6 6 10-10" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
         </div>
-    </section>
+
+        <h1 class="success-title">You&rsquo;re in, welcome!</h1>
+        <p class="success-subtitle">Payment confirmed. Your TotWise Lab toolkit is ready. Here&rsquo;s everything that happens next.</p>
+
+        <!-- Steps -->
+        <div class="steps">
+            <div class="step">
+                <div class="step-num done">
+                    <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M3 8l4 4 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="step-body">
+                    <strong>Payment confirmed</strong>
+                    <p>Your purchase went through. You&rsquo;re officially a TotWise parent.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                    <strong>Check your email</strong>
+                    <p>A secure login link is on its way to your inbox right now. No password needed &mdash; just click the link to access your toolkit.</p>
+                    <div class="email-box">
+                        <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 7l8 5 8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        Check spam if it doesn&rsquo;t arrive within 2 minutes.
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                    <strong>Open Day 1</strong>
+                    <p>Your toolkit starts with Day 1 &mdash; a gentle, 10-minute activity that builds the foundation for everything that follows. No prep needed.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-body">
+                    <strong>Come back every day</strong>
+                    <p>One activity. One day. That&rsquo;s the whole practice. The app remembers where you are &mdash; just open and go.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- WhatsApp CTA -->
+        <div class="whatsapp-section">
+            <div class="whatsapp-section-label">Step 5 &mdash; Highly recommended</div>
+            <h3>Join the TotWise Parents Community</h3>
+            <p>2,400+ parents doing the same 30 days. Real wins, real questions, zero judgment. You get the community link only once &mdash; right here, right now.</p>
+            <a href="https://chat.whatsapp.com/Bv9N8oMQKU4KpslEfSGCQl"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="btn-whatsapp"
+               id="waJoinBtn">
+                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Join the Parent Community
+            </a>
+            <div class="whatsapp-members">&#x2714; 2,400+ parents already inside</div>
+        </div>
+
+        <!-- Primary CTA -->
+        <a href="/Dashboard/dashboard.html" class="btn-dashboard" id="dashboardBtn">
+            Go to My Dashboard &rarr;
+        </a>
+        <p class="cta-note">Or wait for your login email and click from there.</p>
+
+    </div>
+
+    <div class="brand-footer">
+        <strong>TotWise Lab</strong> &mdash; Tiny Steps. Wise Growth.<br>
+        Questions? Email us at <a href="mailto:hello@totwise.com" style="color: #7BA876;">hello@totwise.com</a>
+    </div>
+
+    <script>
+        // Track WhatsApp join click in localStorage so dashboard banner can acknowledge it
+        document.getElementById('waJoinBtn')?.addEventListener('click', function() {
+            localStorage.setItem('totwise.wa_joined', '1');
+        });
+
+        // Attempt to resolve the correct dashboard path
+        (function() {
+            const btn = document.getElementById('dashboardBtn');
+            if (!btn) return;
+            const proto = window.location.protocol;
+            const base  = window.location.pathname.split('/payment-success')[0];
+            btn.href = base + '/Dashboard/dashboard.html';
+        })();
+    </script>
 </body>
 </html>

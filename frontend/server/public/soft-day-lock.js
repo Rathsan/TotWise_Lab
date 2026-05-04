@@ -256,6 +256,72 @@
         document.head.appendChild(style);
     }
 
+    // ── Month-level access guard ───────────────────────────────────────────
+    /**
+     * Returns true if the current page's month is not yet unlocked for the user.
+     * Reads monthsUnlocked from sessionStorage (set by auth.js after session check).
+     */
+    function isMonthLocked() {
+        if (window.TotWiseCore && typeof window.TotWiseCore.isMonthAccessible === 'function') {
+            const pageMonth = window.TotWiseCore.getCurrentPageMonth();
+            return !window.TotWiseCore.isMonthAccessible(pageMonth);
+        }
+        return false;
+    }
+
+    /**
+     * Show a "Month not unlocked" overlay and redirect to dashboard.
+     * Called once at page load if the user doesn't have access to this month.
+     */
+    function showMonthLockedScreen() {
+        const protocol = window.location.protocol;
+        const pathname = window.location.pathname;
+        let dashboardPath = '/Dashboard/dashboard.html';
+        if (protocol === 'http:' || protocol === 'https:') {
+            const base = pathname.split('/member_Month')[0] || pathname.split('/member_Day')[0] || '';
+            dashboardPath = `${base}/Dashboard/dashboard.html`;
+        }
+
+        // Overlay the entire page
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position:fixed;top:0;left:0;right:0;bottom:0;
+            background:rgba(255,248,245,0.97);
+            display:flex;align-items:center;justify-content:center;
+            z-index:99999;padding:1rem;
+        `;
+        overlay.innerHTML = `
+            <div style="max-width:420px;text-align:center;font-family:'Nunito',sans-serif;">
+                <div style="font-size:3rem;margin-bottom:1rem;">🔒</div>
+                <h2 style="font-size:1.5rem;font-weight:700;color:#2D3B3A;margin-bottom:0.75rem;">This month isn't unlocked yet</h2>
+                <p style="font-size:1rem;color:#4A5857;line-height:1.6;margin-bottom:1.5rem;">
+                    Complete Month 1 first, then unlock Month 2 from your dashboard.
+                </p>
+                <a href="${dashboardPath}"
+                   style="display:inline-block;background:#A8C5A0;color:#fff;text-decoration:none;
+                          padding:0.75rem 2rem;border-radius:9999px;font-weight:700;font-size:1rem;">
+                    Back to Dashboard
+                </a>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+    }
+
+    // Check month access as soon as DOM is ready
+    function checkMonthAccessOnLoad() {
+        if (typeof window.TotWiseCore === 'undefined') return; // core not loaded yet
+        if (isMonthLocked()) {
+            showMonthLockedScreen();
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', checkMonthAccessOnLoad);
+    } else {
+        // Small delay to allow auth.js to complete its session check and set sessionStorage
+        setTimeout(checkMonthAccessOnLoad, 800);
+    }
+
     /**
      * Get current unlocked day from TotWiseCore
      */
@@ -333,8 +399,14 @@
         let dashboardPath = '/Dashboard/dashboard.html';
         
         if (protocol === 'http:' || protocol === 'https:') {
-            const basePath = pathname.split('/member_Day')[0];
-            backToTodayPath = `${basePath}/member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
+            const pageMonth = (window.TotWiseCore && window.TotWiseCore.getCurrentPageMonth) ? window.TotWiseCore.getCurrentPageMonth() : 1;
+            const basePath = pathname.includes('/member_Month')
+                ? pathname.split('/member_Month')[0]
+                : pathname.split('/member_Day')[0];
+            const todayFolder = pageMonth > 1
+                ? `member_Month${pageMonth}_Day${currentUnlockedDay}`
+                : `member_Day${currentUnlockedDay}`;
+            backToTodayPath = `${basePath}/${todayFolder}/member-day${currentUnlockedDay}.html`;
             dashboardPath = `${basePath}/Dashboard/dashboard.html`;
         } else {
             backToTodayPath = `../member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
@@ -488,8 +560,14 @@
         let dashboardPath = '/Dashboard/dashboard.html';
         
         if (protocol === 'http:' || protocol === 'https:') {
-            const basePath = pathname.split('/member_Day')[0];
-            backToTodayPath = `${basePath}/member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
+            const pageMonth = (window.TotWiseCore && window.TotWiseCore.getCurrentPageMonth) ? window.TotWiseCore.getCurrentPageMonth() : 1;
+            const basePath = pathname.includes('/member_Month')
+                ? pathname.split('/member_Month')[0]
+                : pathname.split('/member_Day')[0];
+            const todayFolder = pageMonth > 1
+                ? `member_Month${pageMonth}_Day${currentUnlockedDay}`
+                : `member_Day${currentUnlockedDay}`;
+            backToTodayPath = `${basePath}/${todayFolder}/member-day${currentUnlockedDay}.html`;
             dashboardPath = `${basePath}/Dashboard/dashboard.html`;
         } else {
             backToTodayPath = `../member_Day${currentUnlockedDay}/member-day${currentUnlockedDay}.html`;
@@ -622,7 +700,9 @@
                 let dashboardPath = '/Dashboard/dashboard.html';
                 
                 if (protocol === 'http:' || protocol === 'https:') {
-                    const basePath = pathname.split('/member_Day')[0];
+                    const basePath = pathname.includes('/member_Month')
+                        ? pathname.split('/member_Month')[0]
+                        : pathname.split('/member_Day')[0];
                     dashboardPath = `${basePath}/Dashboard/dashboard.html`;
                 } else {
                     dashboardPath = '../Dashboard/dashboard.html';
@@ -717,6 +797,8 @@
          */
         showCompletionBlockedPopup: showCompletionBlockedPopup,
         showCompletionBlockedModal: showCompletionBlockedPopup,
-        activateSoftLockPage: activateSoftLockPage
+        activateSoftLockPage: activateSoftLockPage,
+        isMonthLocked: isMonthLocked,
+        showMonthLockedScreen: showMonthLockedScreen,
     };
 })();

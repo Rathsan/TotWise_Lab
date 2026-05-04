@@ -18,12 +18,17 @@ export default async function handler(req, res) {
     if (!activeSub) {
       return res.status(403).json({ error: 'Subscription inactive' });
     }
+
     const refreshedToken = signSession({ userId: payload.userId, email: payload.email });
     setSessionCookie(res, refreshedToken);
+
     return res.status(200).json({
-      authenticated: true,
-      email: payload.email,
-      userId: payload.userId
+      authenticated:  true,
+      email:          payload.email,
+      userId:         payload.userId,
+      currentMonth:   activeSub.current_month   ?? 1,
+      monthsUnlocked: activeSub.months_unlocked ?? 1,
+      subscriptionId: activeSub.id,
     });
   } catch (error) {
     return res.status(401).json({ error: 'Unauthenticated' });

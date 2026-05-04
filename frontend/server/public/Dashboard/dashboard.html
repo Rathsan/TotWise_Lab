@@ -33,6 +33,26 @@
         </header>
 
         <main class="content">
+            <!-- WhatsApp Community Banner (dismissed via localStorage) -->
+            <div class="wa-banner" id="waBanner">
+                <div class="wa-banner-inner">
+                    <span class="wa-banner-icon">
+                        <svg viewBox="0 0 24 24" fill="#25D366" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                    </span>
+                    <div class="wa-banner-text">
+                        <strong>2,400+ parents doing this with you.</strong>
+                        <span>Join the TotWise Parents community on WhatsApp &mdash; share wins, ask questions, stay consistent.</span>
+                    </div>
+                    <a href="https://chat.whatsapp.com/Bv9N8oMQKU4KpslEfSGCQl"
+                       target="_blank" rel="noopener noreferrer"
+                       class="wa-banner-btn"
+                       id="waJoinBannerBtn">Join Free</a>
+                    <button class="wa-banner-close" id="waBannerClose" aria-label="Dismiss">&#x2715;</button>
+                </div>
+            </div>
+
             <!-- Welcome Strip -->
             <section class="welcome-strip">
                 <div class="welcome-content">
@@ -366,6 +386,268 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Your Child This Month -->
+            <div class="child-this-month">
+                <div class="child-month-header">
+                    <span class="child-month-icon">🎯</span>
+                    <span class="child-month-title">Your Child This Month</span>
+                </div>
+                <ul class="child-milestone-list">
+                    <li>Building vocabulary through naming games — your child is in the middle of the fastest language growth they will ever experience.</li>
+                    <li>Learning turn-taking and cooperation — the social foundations that determine how they will make friends and work with others for life.</li>
+                    <li>Developing emotional vocabulary — the ability to name feelings is the single most evidence-backed predictor of emotional regulation.</li>
+                    <li>Strengthening attention span through short, structured play — exactly the kind this month provides.</li>
+                </ul>
+            </div>
+
+            <!-- 12-Month Journey Arc -->
+            <section class="year-journey">
+                <div class="year-journey-header">
+                    <h2 class="year-journey-title">Your 12-Month Journey</h2>
+                    <p class="year-journey-subtitle">Ages 2–3 · One month at a time</p>
+                </div>
+
+                <!-- Month 1 — Active -->
+                <div class="month-card month-card-active">
+                    <div class="month-card-header">
+                        <div class="month-left">
+                            <div class="month-num-badge">1</div>
+                            <div>
+                                <div class="month-info-name">Foundation</div>
+                                <div class="month-info-theme">Language, Attention &amp; Emotional Trust</div>
+                            </div>
+                        </div>
+                        <div class="month-right">
+                            <span class="month-status-badge badge-active">Active</span>
+                        </div>
+                    </div>
+                    <div class="month-progress-bar-wrap">
+                        <div class="month-progress-label">
+                            <span id="month1DaysLabel">0 of 30 days</span>
+                            <span id="month1Percent">0%</span>
+                        </div>
+                        <div class="month-progress-bar">
+                            <div class="month-progress-fill" id="month1Fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <!-- Unlock Month 2 CTA — shown when ≥28 days complete -->
+                    <div class="unlock-next-cta" id="unlockMonth2Cta">
+                        <p class="unlock-cta-text">You're almost done with Month 1! <strong>Month 2: Words &amp; Wonder</strong> is ready — vocabulary explosion, body naming, and the magic of questions.</p>
+                        <a href="#unlock" class="btn-unlock-month" id="unlockMonth2Btn">
+                            Unlock Month 2
+                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
+                                <path d="M5 10h10M12 7l3 3-3 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Months 2–12 — Locked -->
+                <div class="month-card month-card-locked">
+                    <div class="month-card-header">
+                        <div class="month-left">
+                            <div class="month-num-badge">2</div>
+                            <div>
+                                <div class="month-info-name">Words &amp; Wonder</div>
+                                <div class="month-info-theme">Vocabulary Explosion</div>
+                            </div>
+                        </div>
+                        <span class="month-status-badge badge-locked">🔒 Locked</span>
+                    </div>
+                    <p class="month-teaser-text">Two-word combinations, naming everything around the house, and the first "Why?" questions. Complete Month 1 to unlock.</p>
+                </div>
+
+                <div class="month-card month-card-locked">
+                    <div class="month-card-header">
+                        <div class="month-left">
+                            <div class="month-num-badge">3</div>
+                            <div>
+                                <div class="month-info-name">Body &amp; Movement</div>
+                                <div class="month-info-theme">Physical Confidence</div>
+                            </div>
+                        </div>
+                        <span class="month-status-badge badge-locked">🔒 Locked</span>
+                    </div>
+                    <p class="month-teaser-text">Jumping, dancing, body part naming, and building physical courage. The foundation of coordination and spatial awareness.</p>
+                </div>
+
+                <div class="month-card month-card-locked">
+                    <div class="month-card-header">
+                        <div class="month-left">
+                            <div class="month-num-badge">4</div>
+                            <div>
+                                <div class="month-info-name">Feelings &amp; Faces</div>
+                                <div class="month-info-theme">Emotional Literacy</div>
+                            </div>
+                        </div>
+                        <span class="month-status-badge badge-locked">🔒 Locked</span>
+                    </div>
+                    <p class="month-teaser-text">Naming emotions in self and others, mirror play, and the scripts that prevent tantrums before they start.</p>
+                </div>
+
+                <div class="month-card month-card-locked">
+                    <div class="month-card-header">
+                        <div class="month-left">
+                            <div class="month-num-badge">5</div>
+                            <div>
+                                <div class="month-info-name">Hands &amp; Making</div>
+                                <div class="month-info-theme">Fine Motor &amp; Creativity</div>
+                            </div>
+                        </div>
+                        <span class="month-status-badge badge-locked">🔒 Locked</span>
+                    </div>
+                    <p class="month-teaser-text">Play-dough, threading, tearing, scribbling. Every mess is a milestone — this month celebrates process over product.</p>
+                </div>
+
+                <div class="month-card month-card-locked">
+                    <div class="month-card-header">
+                        <div class="month-left">
+                            <div class="month-num-badge">6</div>
+                            <div>
+                                <div class="month-info-name">Pretend &amp; Story</div>
+                                <div class="month-info-theme">Imaginative Play</div>
+                            </div>
+                        </div>
+                        <span class="month-status-badge badge-locked">🔒 Locked</span>
+                    </div>
+                    <p class="month-teaser-text">Role play, toy scenarios, and the "what if" game. Imagination at this age is not just fun — it is the birth of abstract thinking.</p>
+                </div>
+
+                <div class="month-card month-card-locked">
+                    <div class="month-card-header">
+                        <div class="month-left">
+                            <div class="month-num-badge">7</div>
+                            <div>
+                                <div class="month-info-name">Friends &amp; Sharing</div>
+                                <div class="month-info-theme">Social Skills</div>
+                            </div>
+                        </div>
+                        <span class="month-status-badge badge-locked">🔒 Locked</span>
+                    </div>
+                    <p class="month-teaser-text">Advanced turn-taking, parallel to cooperative play, and the scripts for handling conflict with kindness.</p>
+                </div>
+
+                <div class="month-card month-card-locked">
+                    <div class="month-card-header">
+                        <div class="month-left">
+                            <div class="month-num-badge">8</div>
+                            <div>
+                                <div class="month-info-name">Patterns &amp; Numbers</div>
+                                <div class="month-info-theme">Early Cognition</div>
+                            </div>
+                        </div>
+                        <span class="month-status-badge badge-locked">🔒 Locked</span>
+                    </div>
+                    <p class="month-teaser-text">Sorting, matching, counting 1–5, shapes, and size comparisons. Math is everywhere — this month teaches you to see it.</p>
+                </div>
+
+                <div class="month-card month-card-locked">
+                    <div class="month-card-header">
+                        <div class="month-left">
+                            <div class="month-num-badge">9</div>
+                            <div>
+                                <div class="month-info-name">Me &amp; Mine</div>
+                                <div class="month-info-theme">Independence &amp; Identity</div>
+                            </div>
+                        </div>
+                        <span class="month-status-badge badge-locked">🔒 Locked</span>
+                    </div>
+                    <p class="month-teaser-text">Dressing, self-feeding, routines, and preferences. Letting your child do it themselves — slowly — is the hardest and most important thing you can do.</p>
+                </div>
+
+                <div class="month-card month-card-locked">
+                    <div class="month-card-header">
+                        <div class="month-left">
+                            <div class="month-num-badge">10</div>
+                            <div>
+                                <div class="month-info-name">Books &amp; Sounds</div>
+                                <div class="month-info-theme">Pre-Literacy</div>
+                            </div>
+                        </div>
+                        <span class="month-status-badge badge-locked">🔒 Locked</span>
+                    </div>
+                    <p class="month-teaser-text">Letter awareness, rhyming, book concepts, and recognising their own name. The building blocks of reading start here — years before school.</p>
+                </div>
+
+                <div class="month-card month-card-locked">
+                    <div class="month-card-header">
+                        <div class="month-left">
+                            <div class="month-num-badge">11</div>
+                            <div>
+                                <div class="month-info-name">Think &amp; Solve</div>
+                                <div class="month-info-theme">Problem-Solving</div>
+                            </div>
+                        </div>
+                        <span class="month-status-badge badge-locked">🔒 Locked</span>
+                    </div>
+                    <p class="month-teaser-text">Multi-step problems, frustration tolerance, and flexible thinking. Building the persistence that no school can teach after the window closes.</p>
+                </div>
+
+                <div class="month-card month-card-locked">
+                    <div class="month-card-header">
+                        <div class="month-left">
+                            <div class="month-num-badge">12</div>
+                            <div>
+                                <div class="month-info-name">Ready &amp; Growing</div>
+                                <div class="month-info-theme">School Readiness</div>
+                            </div>
+                        </div>
+                        <span class="month-status-badge badge-locked">🔒 Locked</span>
+                    </div>
+                    <p class="month-teaser-text">Group rules, transitions, self-regulation, and the celebration of a full year of growth. Your child is ready. You made them ready.</p>
+                </div>
+
+                <!-- Full Year Upsell -->
+                <div style="text-align: center; padding: 16px 0 8px;">
+                    <p style="font-size: 13px; color: var(--slate-muted); margin-bottom: 12px;">Unlock all 12 months for ₹999 — less than ₹83/month</p>
+                    <a href="/#pricing" class="btn-unlock-month" style="text-decoration: none;">
+                        Unlock Full Year — ₹999
+                    </a>
+                </div>
+            </section>
+
+            <!-- Parent Win of the Week -->
+            <div class="parent-win">
+                <div class="parent-win-label">&#x1F4AC; Parent Win of the Week</div>
+                <p class="parent-win-quote" id="parentWinQuote"></p>
+                <span class="parent-win-attribution" id="parentWinAttrib"></span>
+                <div class="parent-win-nav">
+                    <button class="parent-win-prev" id="parentWinPrev" aria-label="Previous">&#8592; Previous</button>
+                    <span class="parent-win-dots" id="parentWinDots"></span>
+                    <button class="parent-win-next" id="parentWinNext" aria-label="Next">Next &#8594;</button>
+                </div>
+            </div>
+
+            <!-- Shareable Milestone Card -->
+            <div class="milestone-share-section">
+                <p class="milestone-share-label">Your milestone card &mdash; screenshot &amp; share &#x1F4F8;</p>
+                <div class="milestone-card-share" id="shareCard">
+                    <div class="share-card-brand">TotWise Lab &middot; 2&ndash;3 Years</div>
+                    <div class="share-card-milestone-badge" id="shareCardBadge">&#x2605;</div>
+                    <div class="share-card-day" id="shareCardDay">1</div>
+                    <div class="share-card-of" id="shareCardOf">of 30 days</div>
+                    <div class="share-card-month" id="shareCardMonthLabel">Month 1 &middot; Settle &amp; Connect</div>
+                    <div class="share-card-message" id="shareCardMessage">&ldquo;Showing up every day is the whole thing.&rdquo;</div>
+                    <div class="share-card-actions">
+                        <button class="btn-screenshot btn-screenshot--save" id="saveCardBtn">
+                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <path d="M10 3v10M6 9l4 4 4-4"/><rect x="3" y="14" width="14" height="3" rx="1"/>
+                            </svg>
+                            Save Image
+                        </button>
+                        <button class="btn-screenshot" id="copyShareBtn">
+                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <rect x="3" y="7" width="10" height="10" rx="2"/>
+                                <path d="M7 7V5a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2h-2"/>
+                            </svg>
+                            Copy Text
+                        </button>
+                    </div>
+                </div>
+                <p class="share-card-hint" id="shareCardHint"></p>
+            </div>
+
         </main>
     </div>
 
@@ -529,9 +811,187 @@
             }
         }
         
+        // Update 12-month arc progress and unlock CTA
+        function updateMonthArc() {
+            const completedDays = TotWiseCore.getCompletedDays();
+            const count = completedDays.length;
+            const pct = Math.round((count / 30) * 100);
+
+            const label = document.getElementById('month1DaysLabel');
+            const percent = document.getElementById('month1Percent');
+            const fill = document.getElementById('month1Fill');
+            if (label) label.textContent = `${count} of 30 days`;
+            if (percent) percent.textContent = `${pct}%`;
+            if (fill) fill.style.width = `${pct}%`;
+
+            // Show unlock CTA when 28+ days complete
+            const cta = document.getElementById('unlockMonth2Cta');
+            if (cta && count >= 28) cta.classList.add('visible');
+
+            // Update week-aware shareable card
+            const MILESTONES = [
+                { days: 0,  badge: '&#x1F331;', label: 'Day 1',            of: 'of 30 days',  msg: 'Showing up every day is the whole thing.',        hint: '' },
+                { days: 7,  badge: '&#x2B50;',  label: 'Week 1 Complete!', of: '7 days done', msg: 'Routines are forming. Your child feels the safety.', hint: 'Share with someone who should know.' },
+                { days: 14, badge: '&#x1F525;', label: 'Halfway There!',   of: '14 of 30',    msg: 'Two weeks in. The consistency is the magic.',        hint: 'Drop this in your WhatsApp status.' },
+                { days: 21, badge: '&#x1F3C6;', label: 'Week 3 Done!',     of: '21 of 30',    msg: 'Your child is noticing patterns. So are you.',       hint: 'The community wants to hear your win.' },
+                { days: 28, badge: '&#x1F44F;', label: 'Almost Done!',     of: '28 of 30',    msg: '28 days. Two more and Month 1 is yours.',           hint: 'You are almost there.' },
+                { days: 30, badge: '&#x1F3C5;', label: 'Month 1 Complete!',of: '30 days done',msg: 'A full month. Your child grew. You showed up.',     hint: 'Month 2 is waiting. You earned it.' },
+            ];
+            const ms = count >= 30 ? MILESTONES[5]
+                     : count >= 28 ? MILESTONES[4]
+                     : count >= 21 ? MILESTONES[3]
+                     : count >= 14 ? MILESTONES[2]
+                     : count >= 7  ? MILESTONES[1]
+                     : MILESTONES[0];
+
+            const shareDay   = document.getElementById('shareCardDay');
+            const shareOf    = document.getElementById('shareCardOf');
+            const shareMsg   = document.getElementById('shareCardMessage');
+            const shareBadge = document.getElementById('shareCardBadge');
+            const shareHint  = document.getElementById('shareCardHint');
+            if (shareDay)   shareDay.innerHTML   = ms.label;
+            if (shareOf)    shareOf.textContent  = ms.of;
+            if (shareMsg)   shareMsg.textContent = '\u201C' + ms.msg + '\u201D';
+            if (shareBadge) shareBadge.innerHTML = ms.badge;
+            if (shareHint)  shareHint.textContent = ms.hint;
+        }
+
+        // Save card as image (html2canvas)
+        document.getElementById('saveCardBtn')?.addEventListener('click', async function() {
+            const card = document.getElementById('shareCard');
+            if (!card) return;
+            this.textContent = 'Saving...';
+            try {
+                if (typeof html2canvas === 'undefined') {
+                    await new Promise((res, rej) => {
+                        const s = document.createElement('script');
+                        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                        s.onload = res; s.onerror = rej;
+                        document.head.appendChild(s);
+                    });
+                }
+                const canvas = await html2canvas(card, { scale: 2, useCORS: true, backgroundColor: null });
+                const link = document.createElement('a');
+                link.download = 'totwiseLab-milestone.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                this.innerHTML = '&#x2713; Saved!';
+            } catch(e) {
+                this.textContent = 'Screenshot manually';
+            }
+            setTimeout(() => {
+                this.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M10 3v10M6 9l4 4 4-4"/><rect x="3" y="14" width="14" height="3" rx="1"/></svg> Save Image';
+            }, 2500);
+        });
+
+        // Copy progress text to clipboard
+        document.getElementById('copyShareBtn')?.addEventListener('click', function() {
+            const completedDays = TotWiseCore.getCompletedDays ? TotWiseCore.getCompletedDays() : [];
+            const count = completedDays.length || 1;
+            const msgEl = document.getElementById('shareCardMessage');
+            const msg   = msgEl ? msgEl.textContent : 'Showing up every day is the whole thing.';
+            const text  = `Day ${count} of 30 \u00B7 TotWise Lab 2\u20133 Years \u00B7 Month 1: Settle & Connect\n\n${msg}\n\ntotwise.com`;
+            navigator.clipboard?.writeText(text).then(() => {
+                this.innerHTML = '&#x2713; Copied!';
+                setTimeout(() => { this.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="7" width="10" height="10" rx="2"/><path d="M7 7V5a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2h-2"/></svg> Copy Text'; }, 2000);
+            });
+        });
+
+        // Parent Win Quote Rotator
+        (function() {
+            const WINS = [
+                {
+                    quote: "My daughter used to just throw toys and walk away. By Day 12, she was actually waiting for her turn and handing me the next block. I didn't expect to cry on a Tuesday morning, but here we are.",
+                    attrib: "— Priya M., parent of a 2.5-year-old · Month 1"
+                },
+                {
+                    quote: "We were so skeptical. My husband said 'just Google it'. But Day 3 had this exact script for when she refused to get dressed, and it worked on the first try. We've never Googled it since.",
+                    attrib: "— Rohini K., parent of a 2-year-old · Month 1"
+                },
+                {
+                    quote: "Week 3 was when I cried. My son said 'Mama sad?' and touched my face. He learned that from Day 18. That's not something any app just generates.",
+                    attrib: "— Ananya S., parent of a 2.8-year-old · Month 1"
+                },
+                {
+                    quote: "I was doing Day 7 at 10pm after he finally fell asleep. Just reading through what he'd practised that week. I hadn't noticed until that moment how much he'd actually changed.",
+                    attrib: "— Deepa R., parent of a 2.3-year-old · Week 1 Complete"
+                },
+                {
+                    quote: "The script for 'what to say when they won't stop at the park' — I had that exact situation two days later. Pulled up the page, read it out loud, and it de-escalated in under a minute. Magic.",
+                    attrib: "— Vikram T., parent of a 3-year-old · Month 1"
+                },
+                {
+                    quote: "I used to feel guilty every time I couldn't think of something to do with him. Now I just open the app. That guilt is just... gone.",
+                    attrib: "— Sunita P., parent of a 2.6-year-old · Month 2"
+                },
+                {
+                    quote: "My mother-in-law watches on weekends. I shared the dashboard link with her. Now she does the activities too and they have their own little ritual. I didn't expect that at all.",
+                    attrib: "— Meera B., parent of a 2.1-year-old · Month 1"
+                },
+                {
+                    quote: "Day 30 felt like a real milestone. Not just for her — for me. I showed up every day. That's something I haven't done for myself in years.",
+                    attrib: "— Kavitha N., parent of a 2.9-year-old · Month 1 Complete"
+                }
+            ];
+
+            const completedCount = (typeof TotWiseCore !== 'undefined')
+                ? (TotWiseCore.getCompletedDays ? TotWiseCore.getCompletedDays().length : 0)
+                : 0;
+
+            // Start at a quote that matches the parent's stage
+            let idx = completedCount >= 28 ? 7
+                    : completedCount >= 21 ? 5
+                    : completedCount >= 14 ? 3
+                    : completedCount >= 7  ? 2
+                    : 0;
+
+            const quoteEl  = document.getElementById('parentWinQuote');
+            const attribEl = document.getElementById('parentWinAttrib');
+            const dotsEl   = document.getElementById('parentWinDots');
+
+            function renderDots() {
+                if (!dotsEl) return;
+                dotsEl.innerHTML = WINS.map((_, i) =>
+                    `<span class="pw-dot${i === idx ? ' pw-dot--active' : ''}"></span>`
+                ).join('');
+            }
+
+            function showWin(i) {
+                idx = (i + WINS.length) % WINS.length;
+                if (quoteEl)  quoteEl.textContent  = '\u201C' + WINS[idx].quote + '\u201D';
+                if (attribEl) attribEl.textContent = WINS[idx].attrib;
+                renderDots();
+            }
+
+            document.getElementById('parentWinPrev')?.addEventListener('click', () => showWin(idx - 1));
+            document.getElementById('parentWinNext')?.addEventListener('click', () => showWin(idx + 1));
+
+            showWin(idx);
+        })();
+
+        // WhatsApp banner: hide if already dismissed or already joined
+        (function() {
+            const banner = document.getElementById('waBanner');
+            if (!banner) return;
+            const dismissed = localStorage.getItem('totwise.wa_dismissed');
+            const joined    = localStorage.getItem('totwise.wa_joined');
+            if (dismissed || joined) {
+                banner.style.display = 'none';
+            }
+            document.getElementById('waBannerClose')?.addEventListener('click', function() {
+                banner.style.display = 'none';
+                localStorage.setItem('totwise.wa_dismissed', '1');
+            });
+            document.getElementById('waJoinBannerBtn')?.addEventListener('click', function() {
+                localStorage.setItem('totwise.wa_joined', '1');
+                setTimeout(() => { banner.style.display = 'none'; }, 500);
+            });
+        })();
+
         // Update dashboard and greeting on page load
         updateDashboard();
         updateWelcomeGreeting();
+        updateMonthArc();
 
         const daysGrid = document.getElementById('daysGrid');
 
